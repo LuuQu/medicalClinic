@@ -1,14 +1,14 @@
 package com.LuuQu.medicalclinic.repository;
 
 import com.LuuQu.medicalclinic.model.Patient;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class PatientRepository {
     private List<Patient> patientList;
 
