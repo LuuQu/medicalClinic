@@ -1,9 +1,11 @@
 package com.LuuQu.medicalclinic.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@NoArgsConstructor
 @Data
 public class Patient {
     private String email;
