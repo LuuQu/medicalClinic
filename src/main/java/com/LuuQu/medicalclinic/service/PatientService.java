@@ -13,8 +13,8 @@ import java.util.Optional;
 public class PatientService {
     private final PatientRepository patientRepository;
 
-    public List<Patient> getPatientList() {
-        return patientRepository.getPatientList();
+    public List<Patient> getPatients() {
+        return patientRepository.getPatients();
     }
 
     public Patient getPatient(String email) {
@@ -28,14 +28,15 @@ public class PatientService {
     }
 
     public void deletePatient(String email) {
-        if (!patientRepository.deletePatient(email)) {
+        var patient = patientRepository.getPatient(email);
+        if(patient.isEmpty()) {
             throw new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje");
         }
+        patientRepository.deletePatient(patient.get());
     }
 
     public Patient editPatient(String email, Patient patient) {
-        patient.setEmail(email);
-        return patientRepository.editPatient(patient)
+        return patientRepository.editPatient(email, patient)
                 .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje"));
     }
 }

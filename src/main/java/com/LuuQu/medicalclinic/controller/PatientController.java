@@ -13,13 +13,13 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/patient")
+@RequestMapping("/patients")
 public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
     public List<Patient> getPatientList() {
-        return patientService.getPatientList();
+        return patientService.getPatients();
     }
 
     @GetMapping("/{email}")

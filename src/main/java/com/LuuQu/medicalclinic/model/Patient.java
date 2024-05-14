@@ -13,4 +13,14 @@ public class Patient {
     private String lastName;
     private String phoneNumber;
     private LocalDate birthday;
+
+    public Patient(Patient patient) {
+        this.email = patient.getEmail();
+        this.password = patient.getPassword();
+        this.idCardNo = patient.getIdCardNo();
+        this.firstName = patient.getFirstName();
+        this.lastName = patient.getLastName();
+        this.phoneNumber = patient.getPhoneNumber();
+        this.birthday = patient.getBirthday();
+    }
 }

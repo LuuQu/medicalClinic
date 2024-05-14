@@ -1,19 +1,22 @@
 package com.LuuQu.medicalclinic.repository;
 
 import com.LuuQu.medicalclinic.model.Patient;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PatientRepository {
-    private List<Patient> patientList;
+    private final List<Patient> patientList;
 
-    public List<Patient> getPatientList() {
-        return patientList;
+    public List<Patient> getPatients() {
+        return patientList.stream()
+                .map(Patient::new)
+                .collect(Collectors.toList());
     }
 
     public Optional<Patient> getPatient(String email) {
@@ -23,29 +26,29 @@ public class PatientRepository {
     }
 
     public Optional<Patient> addPatient(Patient patient) {
-        Optional<Patient> patientToAdd = patientList.stream().filter(item -> item.getEmail().equals(patient.getEmail())).findFirst();
+        Optional<Patient> patientToAdd = patientList.stream()
+                .filter(item -> item.getEmail().equals(patient.getEmail()))
+                .findFirst();
         if (patientToAdd.isPresent()) {
             return Optional.empty();
         }
         patientList.add(patient);
-        return patientList.stream().filter(item -> item.getEmail().equals(patient.getEmail())).findFirst();
+        return Optional.of(patient);
     }
 
-    public boolean deletePatient(String email) {
-        Optional<Patient> patientToDelete = patientList.stream().filter(item -> item.getEmail().equals(email)).findFirst();
-        if (patientToDelete.isEmpty()) {
-            return false;
-        }
-        patientList.remove(patientToDelete.get());
-        return true;
+    public void deletePatient(Patient patient) {
+        patientList.remove(patient);
     }
 
-    public Optional<Patient> editPatient(Patient patient) {
-        Optional<Patient> patientOptional = patientList.stream().filter(item -> item.getEmail().equals(patient.getEmail())).findFirst();
+    public Optional<Patient> editPatient(String email, Patient patient) {
+        Optional<Patient> patientOptional = patientList.stream()
+                .filter(item -> item.getEmail().equals(email))
+                .findFirst();
         if (patientOptional.isEmpty()) {
             return Optional.empty();
         }
         Patient patientToEdit = patientOptional.get();
+        patientToEdit.setEmail(patient.getEmail());
         patientToEdit.setPassword(patient.getPassword());
         patientToEdit.setIdCardNo(patient.getIdCardNo());
         patientToEdit.setFirstName(patient.getFirstName());
