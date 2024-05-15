@@ -41,21 +41,13 @@ public class PatientService {
         return patientRepository.editPatient(email, patient)
                 .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje"));
     }
-    public Patient editPassword(String email, String passwordInJson) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String password;
-        try {
-            password = objectMapper.readValue(passwordInJson,String.class);
-        }
-        catch (JsonProcessingException e) {
+    public Patient editPassword(String email, Patient patientPassword) {
+        if(patientPassword.getPassword() == null) {
             throw new IllegalArgumentException("Podano niepoprawne body do zmiany hasła");
         }
-        var patientOptional = patientRepository.getPatient(email);
-        if(patientOptional.isEmpty()) {
-            throw new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje");
-        }
-        Patient patient = patientOptional.get();
-        patient.setPassword(password);
+        var patient = patientRepository.getPatient(email)
+                .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje"));
+        patient.setPassword(patientPassword.getPassword());
         patientRepository.editPatient(email,patient);
         return patient;
     }
