@@ -1,15 +1,12 @@
 package com.LuuQu.medicalclinic.controller;
 
-import com.LuuQu.medicalclinic.model.Patient;
+import com.LuuQu.medicalclinic.model.dto.PatientDto;
 import com.LuuQu.medicalclinic.service.PatientService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,18 +15,18 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
-    public List<Patient> getPatientList() {
+    public List<PatientDto> getPatientList() {
         return patientService.getPatients();
     }
 
     @GetMapping("/{email}")
-    public Patient getPatient(@PathVariable String email) {
+    public PatientDto getPatient(@PathVariable String email) {
         return patientService.getPatient(email);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Patient addPatient(@RequestBody Patient patient) {
+    public PatientDto addPatient(@RequestBody PatientDto patient) {
         return patientService.addPatient(patient);
     }
 
@@ -40,11 +37,11 @@ public class PatientController {
     }
 
     @PutMapping("/{email}")
-    public Patient editPatient(@PathVariable String email, @RequestBody Patient patient) {
+    public PatientDto editPatient(@PathVariable String email, @RequestBody PatientDto patient) {
         return patientService.editPatient(email, patient);
     }
     @PatchMapping("change_password/{email}")
-    public Patient editPassword(@PathVariable String email, @RequestBody Patient patient) {
+    public PatientDto editPassword(@PathVariable String email, @RequestBody PatientDto patient) {
         return patientService.editPassword(email,patient);
     }
 }

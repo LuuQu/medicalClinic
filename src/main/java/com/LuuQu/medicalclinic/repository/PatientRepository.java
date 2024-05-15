@@ -1,6 +1,6 @@
 package com.LuuQu.medicalclinic.repository;
 
-import com.LuuQu.medicalclinic.model.Patient;
+import com.LuuQu.medicalclinic.model.entity.Patient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

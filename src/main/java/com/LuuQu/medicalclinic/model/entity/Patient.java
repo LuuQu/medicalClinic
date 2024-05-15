@@ -1,4 +1,4 @@
-package com.LuuQu.medicalclinic.model;
+package com.LuuQu.medicalclinic.model.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

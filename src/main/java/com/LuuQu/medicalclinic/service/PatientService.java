@@ -1,32 +1,35 @@
 package com.LuuQu.medicalclinic.service;
 
-import com.LuuQu.medicalclinic.model.Patient;
+import com.LuuQu.medicalclinic.mapper.PatientMapper;
+import com.LuuQu.medicalclinic.model.dto.PatientDto;
+import com.LuuQu.medicalclinic.model.entity.Patient;
 import com.LuuQu.medicalclinic.repository.PatientRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PatientService {
     private final PatientRepository patientRepository;
 
-    public List<Patient> getPatients() {
-        return patientRepository.getPatients();
+    public List<PatientDto> getPatients() {
+        return patientRepository.getPatients()
+                .stream()
+                .map(PatientMapper::mapPatientEntityToDto)
+                .toList();
     }
 
-    public Patient getPatient(String email) {
-        return patientRepository.getPatient(email)
-                .orElseThrow(() -> new IllegalArgumentException("Brak pacjenta"));
+    public PatientDto getPatient(String email) {
+        return PatientMapper.mapPatientEntityToDto(patientRepository.getPatient(email)
+                                                    .orElseThrow(() -> new IllegalArgumentException("Brak pacjenta")));
     }
 
-    public Patient addPatient(Patient patient) {
-        return patientRepository.addPatient(patient)
-                .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu już istnieje"));
+    public PatientDto addPatient(PatientDto patientDto) {
+        Patient patient = PatientMapper.mapPatientDtoToEntity(patientDto);
+        return PatientMapper.mapPatientEntityToDto(patientRepository.addPatient(patient)
+                .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu już istnieje")));
     }
 
     public void deletePatient(String email) {
@@ -37,11 +40,12 @@ public class PatientService {
         patientRepository.deletePatient(patient.get());
     }
 
-    public Patient editPatient(String email, Patient patient) {
-        return patientRepository.editPatient(email, patient)
-                .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje"));
+    public PatientDto editPatient(String email, PatientDto patientDto) {
+        Patient patient = PatientMapper.mapPatientDtoToEntity(patientDto);
+        return PatientMapper.mapPatientEntityToDto(patientRepository.editPatient(email, patient)
+                .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje")));
     }
-    public Patient editPassword(String email, Patient patientPassword) {
+    public PatientDto editPassword(String email, PatientDto patientPassword) {
         if(patientPassword.getPassword() == null) {
             throw new IllegalArgumentException("Podano niepoprawne body do zmiany hasła");
         }
@@ -49,6 +53,6 @@ public class PatientService {
                 .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje"));
         patient.setPassword(patientPassword.getPassword());
         patientRepository.editPatient(email,patient);
-        return patient;
+        return PatientMapper.mapPatientEntityToDto(patient);
     }
 }
