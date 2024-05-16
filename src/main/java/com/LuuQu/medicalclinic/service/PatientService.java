@@ -13,22 +13,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PatientService {
     private final PatientRepository patientRepository;
+    private final PatientMapper patientMapper;
 
     public List<PatientDto> getPatients() {
         return patientRepository.getPatients()
                 .stream()
-                .map(PatientMapper::mapPatientEntityToDto)
+                .map(patientMapper::mapPatientEntityToDto)
                 .toList();
     }
 
     public PatientDto getPatient(String email) {
-        return PatientMapper.mapPatientEntityToDto(patientRepository.getPatient(email)
+        return patientMapper.mapPatientEntityToDto(patientRepository.getPatient(email)
                                                     .orElseThrow(() -> new IllegalArgumentException("Brak pacjenta")));
     }
 
     public PatientDto addPatient(PatientDto patientDto) {
-        Patient patient = PatientMapper.mapPatientDtoToEntity(patientDto);
-        return PatientMapper.mapPatientEntityToDto(patientRepository.addPatient(patient)
+        Patient patient = patientMapper.mapPatientDtoToEntity(patientDto);
+        return patientMapper.mapPatientEntityToDto(patientRepository.addPatient(patient)
                 .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu już istnieje")));
     }
 
@@ -41,8 +42,8 @@ public class PatientService {
     }
 
     public PatientDto editPatient(String email, PatientDto patientDto) {
-        Patient patient = PatientMapper.mapPatientDtoToEntity(patientDto);
-        return PatientMapper.mapPatientEntityToDto(patientRepository.editPatient(email, patient)
+        Patient patient = patientMapper.mapPatientDtoToEntity(patientDto);
+        return patientMapper.mapPatientEntityToDto(patientRepository.editPatient(email, patient)
                 .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje")));
     }
     public PatientDto editPassword(String email, PatientDto patientPassword) {
@@ -53,6 +54,6 @@ public class PatientService {
                 .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje"));
         patient.setPassword(patientPassword.getPassword());
         patientRepository.editPatient(email,patient);
-        return PatientMapper.mapPatientEntityToDto(patient);
+        return patientMapper.mapPatientEntityToDto(patient);
     }
 }
