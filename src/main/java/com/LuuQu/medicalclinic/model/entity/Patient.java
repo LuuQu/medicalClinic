@@ -30,7 +30,7 @@ public class Patient {
     @Column(name = "BIRTHDAY")
     private LocalDate birthday;
 
-    public void updatePatient(Patient patient) {
+    public void update(Patient patient) {
         this.email = patient.getEmail();
         this.password = patient.getPassword();
         this.idCardNo = patient.getIdCardNo();

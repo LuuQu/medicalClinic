@@ -16,22 +16,21 @@ public class PatientService {
     private final PatientMapper patientMapper;
 
     public List<PatientDto> getPatients() {
-        return patientRepository.findAll()
-                .stream()
-                .map(patientMapper::mapPatientEntityToDto)
+        return patientRepository.findAll().stream()
+                .map(patientMapper::toDto)
                 .toList();
     }
 
     public PatientDto getPatient(String email) {
         Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Brak pacjenta"));
-        return patientMapper.mapPatientEntityToDto(patient);
+        return patientMapper.toDto(patient);
     }
 
     public PatientDto addPatient(PatientDto patientDto) {
         patientRepository.findByEmail(patientDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu już istnieje"));
-        Patient patient = patientMapper.mapPatientDtoToEntity(patientDto);
+        Patient patient = patientMapper.toEntity(patientDto);
         patientRepository.save(patient);
         return patientDto;
     }
@@ -44,9 +43,9 @@ public class PatientService {
     public PatientDto editPatient(String email, PatientDto patientDto) {
         Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje"));
-        patient.updatePatient(patientMapper.mapPatientDtoToEntity(patientDto));
+        patient.update(patientMapper.toEntity(patientDto));
         patientRepository.save(patient);
-        return patientMapper.mapPatientEntityToDto(patient);
+        return patientMapper.toDto(patient);
     }
 
     public PatientDto editPassword(String email, PatientDto patientPassword) {
@@ -60,6 +59,6 @@ public class PatientService {
         }
         patient.setPassword(patientPassword.getPassword());
         patientRepository.save(patient);
-        return patientMapper.mapPatientEntityToDto(patient);
+        return patientMapper.toDto(patient);
     }
 }
