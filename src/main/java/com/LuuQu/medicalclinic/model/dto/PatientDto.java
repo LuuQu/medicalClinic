@@ -1,11 +1,11 @@
-package com.LuuQu.medicalclinic.model;
+package com.LuuQu.medicalclinic.model.dto;
 
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
-public class Patient {
+public class PatientDto {
     private String email;
     private String password;
     private String idCardNo;
