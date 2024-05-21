@@ -3,7 +3,7 @@ package com.LuuQu.medicalclinic.service;
 import com.LuuQu.medicalclinic.mapper.PatientMapper;
 import com.LuuQu.medicalclinic.model.dto.PatientDto;
 import com.LuuQu.medicalclinic.model.entity.Patient;
-import com.LuuQu.medicalclinic.repository.PatientRepository;
+import com.LuuQu.medicalclinic.repository.IPatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,48 +12,61 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PatientService {
-    private final PatientRepository patientRepository;
+    private final IPatientRepository patientRepository;
     private final PatientMapper patientMapper;
 
     public List<PatientDto> getPatients() {
-        return patientRepository.getPatients()
+        return patientRepository.findAll()
                 .stream()
                 .map(patientMapper::mapPatientEntityToDto)
                 .toList();
     }
-
     public PatientDto getPatient(String email) {
-        return patientMapper.mapPatientEntityToDto(patientRepository.getPatient(email)
-                                                    .orElseThrow(() -> new IllegalArgumentException("Brak pacjenta")));
+        Patient patient = patientRepository.findByEmail(email);
+        if(patient == null) {
+            throw new IllegalArgumentException("Brak pacjenta");
+        }
+        return patientMapper.mapPatientEntityToDto(patient);
     }
 
     public PatientDto addPatient(PatientDto patientDto) {
+        if(patientRepository.findByEmail(patientDto.getEmail()) != null) {
+            throw new IllegalArgumentException("Pacjent o podanym e-mailu już istnieje");
+        }
         Patient patient = patientMapper.mapPatientDtoToEntity(patientDto);
-        return patientMapper.mapPatientEntityToDto(patientRepository.addPatient(patient)
-                .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu już istnieje")));
+        patientRepository.save(patient);
+        return patientDto;
     }
 
     public void deletePatient(String email) {
-        var patient = patientRepository.getPatient(email);
-        if(patient.isEmpty()) {
-            throw new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje");
-        }
-        patientRepository.deletePatient(patient.get());
+        patientRepository.delete(patientRepository.findByEmail(email));
     }
 
     public PatientDto editPatient(String email, PatientDto patientDto) {
-        Patient patient = patientMapper.mapPatientDtoToEntity(patientDto);
-        return patientMapper.mapPatientEntityToDto(patientRepository.editPatient(email, patient)
-                .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje")));
+        Patient patient = patientRepository.findByEmail(email);
+        if(patient == null) {
+            throw new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje");
+        }
+        patient.setEmail(patientDto.getEmail());
+        patient.setPassword(patientDto.getPassword());
+        patient.setIdCardNo(patientDto.getIdCardNo());
+        patient.setFirstName(patientDto.getFirstName());
+        patient.setLastName(patientDto.getLastName());
+        patient.setPhoneNumber(patientDto.getPhoneNumber());
+        patient.setBirthday(patientDto.getBirthday());
+        patientRepository.save(patient);
+        return patientMapper.mapPatientEntityToDto(patient);
     }
     public PatientDto editPassword(String email, PatientDto patientPassword) {
         if(patientPassword.getPassword() == null) {
             throw new IllegalArgumentException("Podano niepoprawne body do zmiany hasła");
         }
-        var patient = patientRepository.getPatient(email)
-                .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje"));
+        Patient patient = patientRepository.findByEmail(email);
+        if(patient == null) {
+            throw new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje");
+        }
         patient.setPassword(patientPassword.getPassword());
-        patientRepository.editPatient(email,patient);
+        patientRepository.save(patient);
         return patientMapper.mapPatientEntityToDto(patient);
     }
 }
