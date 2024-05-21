@@ -4,6 +4,7 @@ import com.LuuQu.medicalclinic.mapper.PatientMapper;
 import com.LuuQu.medicalclinic.model.dto.PatientDto;
 import com.LuuQu.medicalclinic.model.entity.Patient;
 import com.LuuQu.medicalclinic.repository.PatientRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +24,14 @@ public class PatientService {
 
     public PatientDto getPatient(String email) {
         Patient patient = patientRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Brak pacjenta"));
+                .orElseThrow(() -> new IllegalArgumentException("Patient does not exist"));
         return patientMapper.toDto(patient);
     }
 
+    @Transactional
     public PatientDto addPatient(PatientDto patientDto) {
         patientRepository.findByEmail(patientDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu już istnieje"));
+                .orElseThrow(() -> new IllegalArgumentException("Patient with given e-mail already exist"));
         Patient patient = patientMapper.toEntity(patientDto);
         patientRepository.save(patient);
         return patientDto;
@@ -37,26 +39,25 @@ public class PatientService {
 
     public void deletePatient(String email) {
         patientRepository.delete(patientRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu już istnieje")));
+                .orElseThrow(() -> new IllegalArgumentException("Patient does not exist")));
     }
 
+    @Transactional
     public PatientDto editPatient(String email, PatientDto patientDto) {
         Patient patient = patientRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje"));
+                .orElseThrow(() -> new IllegalArgumentException("Patient does not exist"));
         patient.update(patientMapper.toEntity(patientDto));
         patientRepository.save(patient);
         return patientMapper.toDto(patient);
     }
 
+    @Transactional
     public PatientDto editPassword(String email, PatientDto patientPassword) {
         if (patientPassword.getPassword() == null) {
-            throw new IllegalArgumentException("Podano niepoprawne body do zmiany hasła");
+            throw new IllegalArgumentException("Incorrect body");
         }
         Patient patient = patientRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje"));
-        if (patient == null) {
-            throw new IllegalArgumentException("Pacjent o podanym e-mailu nie istnieje");
-        }
+                .orElseThrow(() -> new IllegalArgumentException("Patient does not exist"));
         patient.setPassword(patientPassword.getPassword());
         patientRepository.save(patient);
         return patientMapper.toDto(patient);
