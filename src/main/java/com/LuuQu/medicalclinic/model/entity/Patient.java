@@ -1,5 +1,7 @@
 package com.LuuQu.medicalclinic.model.entity;
 
+import com.LuuQu.medicalclinic.mapper.PatientMapper;
+import com.LuuQu.medicalclinic.model.dto.PatientDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +14,7 @@ import java.time.LocalDate;
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(name = "EMAIL")
     private String email;
     @Column(name = "PASSWORD")
@@ -28,8 +30,7 @@ public class Patient {
     @Column(name = "BIRTHDAY")
     private LocalDate birthday;
 
-    public Patient(Patient patient) {
-        this.id = patient.getId();
+    public void updatePatient(Patient patient) {
         this.email = patient.getEmail();
         this.password = patient.getPassword();
         this.idCardNo = patient.getIdCardNo();

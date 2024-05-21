@@ -40,8 +40,9 @@ public class PatientController {
     public PatientDto editPatient(@PathVariable String email, @RequestBody PatientDto patient) {
         return patientService.editPatient(email, patient);
     }
+
     @PatchMapping("change_password/{email}")
     public PatientDto editPassword(@PathVariable String email, @RequestBody PatientDto patient) {
-        return patientService.editPassword(email,patient);
+        return patientService.editPassword(email, patient);
     }
 }
