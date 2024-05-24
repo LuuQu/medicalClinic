@@ -7,10 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @NoArgsConstructor
 @Data
 @Entity
+@Table(name="PATIENT")
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +31,8 @@ public class Patient {
     private String phoneNumber;
     @Column(name = "BIRTHDAY")
     private LocalDate birthday;
+    @OneToMany(mappedBy = "patient")
+    private Set<Appointment> appointments;
 
     public void update(Patient patient) {
         this.email = patient.getEmail();

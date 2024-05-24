@@ -30,8 +30,9 @@ public class PatientService {
 
     @Transactional
     public PatientDto addPatient(PatientDto patientDto) {
-        patientRepository.findByEmail(patientDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Patient with given e-mail already exist"));
+        if (patientRepository.findByEmail(patientDto.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Patient with given e-mail already exist");
+        }
         Patient patient = patientMapper.toEntity(patientDto);
         patientRepository.save(patient);
         return patientDto;
