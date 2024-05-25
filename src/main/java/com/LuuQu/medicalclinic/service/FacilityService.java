@@ -3,7 +3,6 @@ package com.LuuQu.medicalclinic.service;
 import com.LuuQu.medicalclinic.mapper.FacilityMapper;
 import com.LuuQu.medicalclinic.model.dto.FacilityDto;
 import com.LuuQu.medicalclinic.model.entity.Facility;
-import com.LuuQu.medicalclinic.repository.DoctorRepository;
 import com.LuuQu.medicalclinic.repository.FacilityRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

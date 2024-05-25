@@ -1,7 +1,6 @@
 package com.LuuQu.medicalclinic.service;
 
 import com.LuuQu.medicalclinic.mapper.DoctorMapper;
-import com.LuuQu.medicalclinic.mapper.FacilityMapper;
 import com.LuuQu.medicalclinic.model.dto.DoctorDto;
 import com.LuuQu.medicalclinic.model.entity.Doctor;
 import com.LuuQu.medicalclinic.model.entity.Facility;
