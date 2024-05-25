@@ -21,7 +21,7 @@ public class AppointmentService {
     public AppointmentDto addPatient(Long patientId, Long appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Appointment not found"));
-        if (appointment.getPatient() != null) {
+        if (!appointment.isFree()) {
             throw new IllegalArgumentException("Appointment already have patient");
         }
         Patient patient = patientRepository.findById(patientId)

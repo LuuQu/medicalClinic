@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +19,7 @@ public class FacilityService {
     public List<FacilityDto> getFacilities() {
         return facilityRepository.findAll().stream()
                 .map(facilityMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public FacilityDto getFacility(Long id) {
@@ -31,8 +30,7 @@ public class FacilityService {
     @Transactional
     public FacilityDto addFacility(FacilityDto facilityDto) {
         Facility facility = facilityMapper.toEntity(facilityDto);
-        facilityRepository.save(facility);
-        return facilityDto;
+        return facilityMapper.toDto(facilityRepository.save(facility));
     }
 
     @Transactional
@@ -40,8 +38,7 @@ public class FacilityService {
         Facility facility = facilityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Non-existent facility"));
         facility.update(facilityMapper.toEntity(facilityDto));
-        facilityRepository.save(facility);
-        return facilityDto;
+        return facilityMapper.toDto(facilityRepository.save(facility));
     }
 
     public void deleteFacility(Long id) {

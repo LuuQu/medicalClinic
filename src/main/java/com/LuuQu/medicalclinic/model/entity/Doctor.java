@@ -32,6 +32,7 @@ public class Doctor {
             inverseJoinColumns = {@JoinColumn(name = "facility_id")}
     )
     private Set<Facility> facilities = new HashSet<>();
+
     public void update(Doctor doctor) {
         this.email = doctor.getEmail();
         this.password = doctor.getPassword();

@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +22,7 @@ public class DoctorService {
     public List<DoctorDto> getDoctors() {
         return doctorRepository.findAll().stream()
                 .map(doctorMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public DoctorDto getDoctor(Long id) {
@@ -34,8 +33,7 @@ public class DoctorService {
     @Transactional
     public DoctorDto addDoctor(DoctorDto doctorDto) {
         Doctor doctor = doctorMapper.toEntity(doctorDto);
-        doctorRepository.save(doctor);
-        return doctorDto;
+        return doctorMapper.toDto(doctorRepository.save(doctor));
     }
 
     @Transactional
@@ -43,8 +41,7 @@ public class DoctorService {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Non-existent doctor"));
         doctor.update(doctorMapper.toEntity(doctorDto));
-        doctorRepository.save(doctor);
-        return doctorMapper.toDto(doctor);
+        return doctorMapper.toDto(doctorRepository.save(doctor));
     }
 
     public void deleteDoctor(Long id) {
@@ -58,8 +55,7 @@ public class DoctorService {
                 .orElseThrow(() -> new IllegalArgumentException("Non-existent doctor"));
         Facility facility = facilityRepository.findById(facilityId)
                 .orElseThrow(() -> new IllegalArgumentException("Non-existent facility"));
-        doctor.getFacilities()
-                .add(facility);
+        doctor.getFacilities().add(facility);
         doctorRepository.save(doctor);
         return doctorMapper.toDto(doctor);
     }
@@ -69,8 +65,7 @@ public class DoctorService {
                 .orElseThrow(() -> new IllegalArgumentException("Non-existent doctor"));
         Facility facility = facilityRepository.findById(facilityId)
                 .orElseThrow(() -> new IllegalArgumentException("Non-existent facility"));
-        doctor.getFacilities()
-                .remove(facility);
+        doctor.getFacilities().remove(facility);
         doctorRepository.save(doctor);
         return doctorMapper.toDto(doctor);
     }
