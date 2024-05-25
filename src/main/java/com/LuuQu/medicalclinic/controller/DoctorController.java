@@ -1,7 +1,6 @@
 package com.LuuQu.medicalclinic.controller;
 
 import com.LuuQu.medicalclinic.model.dto.DoctorDto;
-import com.LuuQu.medicalclinic.model.dto.FacilityDto;
 import com.LuuQu.medicalclinic.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

@@ -3,7 +3,6 @@ package com.LuuQu.medicalclinic.service;
 import com.LuuQu.medicalclinic.mapper.DoctorMapper;
 import com.LuuQu.medicalclinic.mapper.FacilityMapper;
 import com.LuuQu.medicalclinic.model.dto.DoctorDto;
-import com.LuuQu.medicalclinic.model.dto.FacilityDto;
 import com.LuuQu.medicalclinic.model.entity.Doctor;
 import com.LuuQu.medicalclinic.model.entity.Facility;
 import com.LuuQu.medicalclinic.repository.DoctorRepository;
@@ -21,7 +20,6 @@ public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final FacilityRepository facilityRepository;
     private final DoctorMapper doctorMapper;
-    private final FacilityMapper facilityMapper;
 
     public List<DoctorDto> getDoctors() {
         return doctorRepository.findAll().stream()
