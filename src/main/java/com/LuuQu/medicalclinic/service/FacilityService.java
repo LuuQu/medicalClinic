@@ -41,6 +41,7 @@ public class FacilityService {
         return facilityMapper.toDto(facilityRepository.save(facility));
     }
 
+    @Transactional
     public void deleteFacility(Long id) {
         Facility facility = facilityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Non-existent facility"));

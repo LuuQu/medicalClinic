@@ -1,14 +1,15 @@
 package com.LuuQu.medicalclinic.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@NoArgsConstructor
-@Data
+@RequiredArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "DOCTOR")
 public class Doctor {
@@ -25,6 +26,7 @@ public class Doctor {
     private String lastName;
     @Column(name = "SPECIALIZATION")
     private String specialization;
+    @EqualsAndHashCode.Exclude
     @ManyToMany
     @JoinTable(
             name = "Doctor_Facility",
@@ -39,5 +41,48 @@ public class Doctor {
         this.firstName = doctor.getFirstName();
         this.lastName = doctor.getLastName();
         this.specialization = doctor.getSpecialization();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Doctor other))
+            return false;
+
+        return id != null &&
+                id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", specialization='" + specialization + '\'' +
+                ", facilities=" + facilities.stream()
+                .map(Facility::toSimpleString)
+                .collect(Collectors.joining(", ", "[", "]")) +
+                '}';
+    }
+
+    public String toSimpleString() {
+        return "Doctor{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", specialization='" + specialization + '\'' +
+                ", facilities='[...]'" +
+                '}';
     }
 }
