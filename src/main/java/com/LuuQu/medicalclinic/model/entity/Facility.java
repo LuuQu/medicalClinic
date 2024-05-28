@@ -26,7 +26,6 @@ public class Facility {
     private String street;
     @Column(name = "BUILDING_NO")
     private String buildingNo;
-    @EqualsAndHashCode.Exclude
     @ManyToMany
     @JoinTable(
             name = "Doctor_Facility",
@@ -45,10 +44,13 @@ public class Facility {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof Facility other))
+        if (!(o instanceof Facility other)) {
             return false;
+        }
 
         return id != null &&
                 id.equals(other.getId());
@@ -82,7 +84,6 @@ public class Facility {
                 ", zipCode='" + zipCode + '\'' +
                 ", street='" + street + '\'' +
                 ", buildingNo='" + buildingNo + '\'' +
-                ", doctors='[...]'" + 
                 '}';
     }
 }

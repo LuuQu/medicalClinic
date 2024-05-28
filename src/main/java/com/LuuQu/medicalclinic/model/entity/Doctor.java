@@ -26,7 +26,6 @@ public class Doctor {
     private String lastName;
     @Column(name = "SPECIALIZATION")
     private String specialization;
-    @EqualsAndHashCode.Exclude
     @ManyToMany
     @JoinTable(
             name = "Doctor_Facility",
@@ -45,10 +44,13 @@ public class Doctor {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof Doctor other))
+        if (!(o instanceof Doctor other)) {
             return false;
+        }
 
         return id != null &&
                 id.equals(other.getId());
@@ -82,7 +84,6 @@ public class Doctor {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", specialization='" + specialization + '\'' +
-                ", facilities='[...]'" +
                 '}';
     }
 }
