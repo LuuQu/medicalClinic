@@ -1,16 +1,17 @@
 package com.LuuQu.medicalclinic.model.entity;
 
-import com.LuuQu.medicalclinic.mapper.PatientMapper;
-import com.LuuQu.medicalclinic.model.dto.PatientDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Data
 @Entity
+@Table(name="PATIENT")
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +30,8 @@ public class Patient {
     private String phoneNumber;
     @Column(name = "BIRTHDAY")
     private LocalDate birthday;
+    @OneToMany(mappedBy = "patient")
+    private Set<Appointment> appointments = new HashSet<>();
 
     public void update(Patient patient) {
         this.email = patient.getEmail();
