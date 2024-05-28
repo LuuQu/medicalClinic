@@ -15,8 +15,9 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
-    public List<PatientDto> getPatientList() {
-        return patientService.getPatients();
+    public List<PatientDto> getPatientList(@RequestParam(defaultValue = "0") Integer page,
+                                           @RequestParam(defaultValue = "10") Integer size) {
+        return patientService.getPatients(page, size);
     }
 
     @GetMapping("/{email}")

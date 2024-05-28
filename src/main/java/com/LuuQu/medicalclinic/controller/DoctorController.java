@@ -14,8 +14,9 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping
-    public List<DoctorDto> getDoctorList() {
-        return doctorService.getDoctors();
+    public List<DoctorDto> getDoctorList(@RequestParam(defaultValue = "0") Integer page,
+                                         @RequestParam(defaultValue = "10") Integer size) {
+        return doctorService.getDoctors(page, size);
     }
 
     @GetMapping("/{id}")

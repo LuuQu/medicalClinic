@@ -14,8 +14,9 @@ public class FacilityController {
     private final FacilityService facilityService;
 
     @GetMapping
-    public List<FacilityDto> getFacilities() {
-        return facilityService.getFacilities();
+    public List<FacilityDto> getFacilities(@RequestParam(defaultValue = "0") Integer page,
+                                           @RequestParam(defaultValue = "10") Integer size) {
+        return facilityService.getFacilities(page, size);
     }
 
     @GetMapping("/{id}")
