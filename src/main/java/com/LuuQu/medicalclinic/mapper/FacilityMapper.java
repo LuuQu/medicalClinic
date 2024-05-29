@@ -4,8 +4,9 @@ import com.LuuQu.medicalclinic.model.dto.FacilityDto;
 import com.LuuQu.medicalclinic.model.entity.Facility;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {DoctorMapper.class})
 public interface FacilityMapper {
     FacilityDto toDto(Facility facility);
+
     Facility toEntity(FacilityDto facilityDto);
 }

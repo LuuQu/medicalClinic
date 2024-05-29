@@ -24,6 +24,7 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
+
     public boolean isFree() {
         return patient == null;
     }
