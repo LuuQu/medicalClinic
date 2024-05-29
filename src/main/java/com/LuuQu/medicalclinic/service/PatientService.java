@@ -6,7 +6,6 @@ import com.LuuQu.medicalclinic.model.entity.Patient;
 import com.LuuQu.medicalclinic.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +17,7 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
 
-    public List<PatientDto> getPatients(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page,size);
+    public List<PatientDto> getPatients(Pageable pageable) {
         return patientRepository.findAll(pageable).stream()
                 .map(patientMapper::toDto)
                 .toList();

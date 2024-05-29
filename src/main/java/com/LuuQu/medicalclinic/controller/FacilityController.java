@@ -3,6 +3,7 @@ package com.LuuQu.medicalclinic.controller;
 import com.LuuQu.medicalclinic.model.dto.FacilityDto;
 import com.LuuQu.medicalclinic.service.FacilityService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +15,8 @@ public class FacilityController {
     private final FacilityService facilityService;
 
     @GetMapping
-    public List<FacilityDto> getFacilities(@RequestParam(defaultValue = "0") Integer page,
-                                           @RequestParam(defaultValue = "10") Integer size) {
-        return facilityService.getFacilities(page, size);
+    public List<FacilityDto> getFacilities(Pageable pageable) {
+        return facilityService.getFacilities(pageable);
     }
 
     @GetMapping("/{id}")

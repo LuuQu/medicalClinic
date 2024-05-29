@@ -8,7 +8,6 @@ import com.LuuQu.medicalclinic.repository.DoctorRepository;
 import com.LuuQu.medicalclinic.repository.FacilityRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +20,7 @@ public class DoctorService {
     private final FacilityRepository facilityRepository;
     private final DoctorMapper doctorMapper;
 
-    public List<DoctorDto> getDoctors(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page,size);
+    public List<DoctorDto> getDoctors(Pageable pageable) {
         return doctorRepository.findAll(pageable).stream()
                 .map(doctorMapper::toDto)
                 .toList();

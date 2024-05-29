@@ -3,6 +3,7 @@ package com.LuuQu.medicalclinic.controller;
 import com.LuuQu.medicalclinic.model.dto.DoctorDto;
 import com.LuuQu.medicalclinic.service.DoctorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +15,8 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping
-    public List<DoctorDto> getDoctorList(@RequestParam(defaultValue = "0") Integer page,
-                                         @RequestParam(defaultValue = "10") Integer size) {
-        return doctorService.getDoctors(page, size);
+    public List<DoctorDto> getDoctorList(Pageable pageable) {
+        return doctorService.getDoctors(pageable);
     }
 
     @GetMapping("/{id}")

@@ -3,6 +3,7 @@ package com.LuuQu.medicalclinic.controller;
 import com.LuuQu.medicalclinic.model.dto.PatientDto;
 import com.LuuQu.medicalclinic.service.PatientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +16,8 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
-    public List<PatientDto> getPatientList(@RequestParam(defaultValue = "0") Integer page,
-                                           @RequestParam(defaultValue = "10") Integer size) {
-        return patientService.getPatients(page, size);
+    public List<PatientDto> getPatientList(Pageable pageable) {
+        return patientService.getPatients(pageable);
     }
 
     @GetMapping("/{email}")
