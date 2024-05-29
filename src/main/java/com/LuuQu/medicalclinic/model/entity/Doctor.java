@@ -33,6 +33,8 @@ public class Doctor {
             inverseJoinColumns = {@JoinColumn(name = "facility_id")}
     )
     private Set<Facility> facilities = new HashSet<>();
+    @OneToMany(mappedBy = "doctor")
+    private Set<Appointment> appointments = new HashSet<>();
 
     public void update(Doctor doctor) {
         this.email = doctor.getEmail();

@@ -16,8 +16,8 @@ public class AppointmentController {
         return appointmentService.addPatient(patientId, appointmentId);
     }
 
-    @PostMapping
-    public AppointmentDto addAppointment(@RequestBody AppointmentDto appointmentDto) {
-        return appointmentService.addAppointment(appointmentDto);
+    @PostMapping("/{doctorId}")
+    public AppointmentDto addAppointment(@PathVariable Long doctorId, @RequestBody AppointmentDto appointmentDto) {
+        return appointmentService.addAppointment(doctorId, appointmentDto);
     }
 }
