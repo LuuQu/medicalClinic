@@ -31,7 +31,8 @@ public class FacilityService {
     @Transactional
     public FacilityDto addFacility(FacilityDto facilityDto) {
         Facility facility = facilityMapper.toEntity(facilityDto);
-        return facilityMapper.toDto(facilityRepository.save(facility));
+        facilityRepository.save(facility);
+        return facilityMapper.toDto(facility);
     }
 
     @Transactional
@@ -39,13 +40,16 @@ public class FacilityService {
         Facility facility = facilityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Non-existent facility"));
         facility.update(facilityMapper.toEntity(facilityDto));
-        return facilityMapper.toDto(facilityRepository.save(facility));
+        facilityRepository.save(facility);
+        return facilityMapper.toDto(facility);
     }
 
     @Transactional
     public void deleteFacility(Long id) {
-        Facility facility = facilityRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Non-existent facility"));
-        facilityRepository.delete(facility);
+        var facility = facilityRepository.findById(id);
+        if (facility.isEmpty()) {
+            return;
+        }
+        facilityRepository.delete(facility.get());
     }
 }
