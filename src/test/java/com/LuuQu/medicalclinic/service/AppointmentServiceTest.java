@@ -1,6 +1,8 @@
 package com.LuuQu.medicalclinic.service;
 
 import com.LuuQu.medicalclinic.mapper.AppointmentMapper;
+import com.LuuQu.medicalclinic.mapper.DoctorMapper;
+import com.LuuQu.medicalclinic.mapper.PatientMapper;
 import com.LuuQu.medicalclinic.model.dto.AppointmentDto;
 import com.LuuQu.medicalclinic.model.dto.DoctorSimpleDto;
 import com.LuuQu.medicalclinic.model.dto.PatientDto;
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,14 +32,14 @@ public class AppointmentServiceTest {
     private AppointmentRepository appointmentRepository;
     private PatientRepository patientRepository;
     private DoctorRepository doctorRepository;
-    private AppointmentMapper appointmentMapper;
     @BeforeEach
     void setUp() {
         this.appointmentRepository = Mockito.mock(AppointmentRepository.class);
         this.patientRepository = Mockito.mock(PatientRepository.class);
         this.doctorRepository = Mockito.mock(DoctorRepository.class);
-        this.appointmentMapper = Mappers.getMapper(AppointmentMapper.class);
-
+        AppointmentMapper appointmentMapper = Mappers.getMapper(AppointmentMapper.class);
+        ReflectionTestUtils.setField(appointmentMapper, "doctorMapper",Mappers.getMapper(DoctorMapper.class));
+        ReflectionTestUtils.setField(appointmentMapper, "patientMapper",Mappers.getMapper(PatientMapper.class));
         this.appointmentService = new AppointmentService(appointmentRepository, patientRepository, doctorRepository, appointmentMapper);
     }
     @Test
@@ -202,7 +205,8 @@ public class AppointmentServiceTest {
         when(appointmentRepository.getBetweenTime(1L,startTime,endTime)).thenReturn(new ArrayList<>());
 
         AppointmentDto expectedResult = new AppointmentDto();
-        expectedResult.setId(1L);
+        expectedResult.setStartDate(startTime);
+        expectedResult.setEndDate(endTime);
         DoctorSimpleDto doctorSimpleDto = new DoctorSimpleDto();
         doctorSimpleDto.setId(1L);
         expectedResult.setDoctor(doctorSimpleDto);
