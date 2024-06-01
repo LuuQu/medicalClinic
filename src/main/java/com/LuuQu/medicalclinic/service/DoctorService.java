@@ -34,7 +34,8 @@ public class DoctorService {
     @Transactional
     public DoctorDto addDoctor(DoctorDto doctorDto) {
         Doctor doctor = doctorMapper.toEntity(doctorDto);
-        return doctorMapper.toDto(doctorRepository.save(doctor));
+        doctorRepository.save(doctor);
+        return doctorMapper.toDto(doctor);
     }
 
     @Transactional
@@ -42,13 +43,16 @@ public class DoctorService {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Non-existent doctor"));
         doctor.update(doctorMapper.toEntity(doctorDto));
-        return doctorMapper.toDto(doctorRepository.save(doctor));
+        doctorRepository.save(doctor);
+        return doctorMapper.toDto(doctor);
     }
 
     public void deleteDoctor(Long id) {
-        Doctor doctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Non-existent doctor"));
-        doctorRepository.delete(doctor);
+        var doctor = doctorRepository.findById(id);
+        if(doctor.isEmpty()) {
+            return;
+        }
+        doctorRepository.delete(doctor.get());
     }
 
     public DoctorDto addDoctorFacility(Long doctorId, Long facilityId) {
