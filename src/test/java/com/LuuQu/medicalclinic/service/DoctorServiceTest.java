@@ -60,12 +60,12 @@ public class DoctorServiceTest {
     @Test
     void getDoctor_doctorFound_DtoReturned() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(TestData.DoctorFactory.get(1L)));
-        DoctorDto expectedResult = new DoctorDto();
+        DoctorDto expectedResult = TestData.DoctorDtoFactory.get(1L);
         expectedResult.setId(1L);
 
         DoctorDto result = doctorService.getDoctor(1L);
 
-        Assertions.assertEquals(result, expectedResult);
+        Assertions.assertEquals(expectedResult, result);
     }
 
     @Test

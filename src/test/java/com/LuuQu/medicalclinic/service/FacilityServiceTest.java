@@ -58,7 +58,7 @@ public class FacilityServiceTest {
 
     @Test
     void getFacility_correctApproach_DtoReturned() {
-        when(facilityRepository.findById(1L)).thenReturn(Optional.of(TestData.FacilityFactory.get()));
+        when(facilityRepository.findById(1L)).thenReturn(Optional.of(TestData.FacilityFactory.get(1L)));
         FacilityDto expectedResult = TestData.FacilityDtoFactory.get(1L);
 
         FacilityDto result = facilityService.getFacility(1L);

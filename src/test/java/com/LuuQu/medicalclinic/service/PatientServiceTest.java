@@ -59,12 +59,12 @@ public class PatientServiceTest {
     @Test
     void getPatient_patientFound_DtoReturned() {
         when(patientRepository.findById(1L)).thenReturn(Optional.of(TestData.PatientFactory.get(1L)));
-        PatientDto expectedResult = new PatientDto();
+        PatientDto expectedResult = TestData.PatientDtoFactory.get(1L);
         expectedResult.setId(1L);
 
         PatientDto result = patientService.getPatient(1L);
 
-        Assertions.assertEquals(result, expectedResult);
+        Assertions.assertEquals(expectedResult, result);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class PatientServiceTest {
 
         PatientDto result = patientService.addPatient(patientDto);
 
-        Assertions.assertEquals(result, expectedResult);
+        Assertions.assertEquals(expectedResult, result);
     }
 
     @Test
@@ -132,7 +132,7 @@ public class PatientServiceTest {
 
         PatientDto result = patientService.editPatient(1L, patientDto);
 
-        Assertions.assertEquals(result, expectedResult);
+        Assertions.assertEquals(expectedResult, result);
     }
 
     @Test
@@ -162,12 +162,12 @@ public class PatientServiceTest {
         PatientDto patientPassword = new PatientDto();
         patientPassword.setPassword(password);
         when(patientRepository.findById(1L)).thenReturn(Optional.of(TestData.PatientFactory.get(1L)));
-        PatientDto expectedResult = new PatientDto();
+        PatientDto expectedResult = TestData.PatientDtoFactory.get(1L);
         expectedResult.setPassword(password);
         expectedResult.setId(1L);
 
         PatientDto result = patientService.editPassword(1L, patientPassword);
 
-        Assertions.assertEquals(result, expectedResult);
+        Assertions.assertEquals(expectedResult, result);
     }
 }
