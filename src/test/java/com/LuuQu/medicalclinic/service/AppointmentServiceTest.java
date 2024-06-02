@@ -32,25 +32,28 @@ public class AppointmentServiceTest {
     private AppointmentRepository appointmentRepository;
     private PatientRepository patientRepository;
     private DoctorRepository doctorRepository;
+
     @BeforeEach
     void setUp() {
         this.appointmentRepository = Mockito.mock(AppointmentRepository.class);
         this.patientRepository = Mockito.mock(PatientRepository.class);
         this.doctorRepository = Mockito.mock(DoctorRepository.class);
         AppointmentMapper appointmentMapper = Mappers.getMapper(AppointmentMapper.class);
-        ReflectionTestUtils.setField(appointmentMapper, "doctorMapper",Mappers.getMapper(DoctorMapper.class));
-        ReflectionTestUtils.setField(appointmentMapper, "patientMapper",Mappers.getMapper(PatientMapper.class));
+        ReflectionTestUtils.setField(appointmentMapper, "doctorMapper", Mappers.getMapper(DoctorMapper.class));
+        ReflectionTestUtils.setField(appointmentMapper, "patientMapper", Mappers.getMapper(PatientMapper.class));
         this.appointmentService = new AppointmentService(appointmentRepository, patientRepository, doctorRepository, appointmentMapper);
     }
+
     @Test
     void addPatient_AppointmentDoesNotExist_CorrectException() {
         //given
         when(appointmentRepository.findById(1L)).thenReturn(Optional.empty());
         //when i then
-        assertThatThrownBy(() -> appointmentService.addPatient(1L,1L))
+        assertThatThrownBy(() -> appointmentService.addPatient(1L, 1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Appointment not found");
     }
+
     @Test
     void addPatient_AppointmentHavePatient_CorrectException() {
         //given
@@ -60,10 +63,11 @@ public class AppointmentServiceTest {
         appointment.setPatient(patient);
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
         //when i then
-        assertThatThrownBy(() -> appointmentService.addPatient(1L,1L))
+        assertThatThrownBy(() -> appointmentService.addPatient(1L, 1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Appointment already have patient");
     }
+
     @Test
     void addPatient_PatientNotFound_CorrectException() {
         //given
@@ -72,10 +76,11 @@ public class AppointmentServiceTest {
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());
         //when i then
-        assertThatThrownBy(() -> appointmentService.addPatient(1L,1L))
+        assertThatThrownBy(() -> appointmentService.addPatient(1L, 1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Patient not found");
     }
+
     @Test
     void addPatient_PatientAdded_ReturnAppointmentDto() {
         //given
@@ -93,84 +98,90 @@ public class AppointmentServiceTest {
         appointmentDto.setPatient(patientDto);
 
         //when
-        AppointmentDto result = appointmentService.addPatient(1L,1L);
+        AppointmentDto result = appointmentService.addPatient(1L, 1L);
 
         //then
         assertThat(result).isEqualTo(appointmentDto);
     }
+
     @Test
     void addAppointment_IncorrectMinutesInStartDate_CorrectException() {
         AppointmentDto appointmentDto = new AppointmentDto();
-        LocalDateTime startTime = LocalDateTime.of(2025,11,21,15,5);
+        LocalDateTime startTime = LocalDateTime.now().plusHours(1).withMinute(5);
         appointmentDto.setStartDate(startTime);
 
         //when i then
-        assertThatThrownBy(() -> appointmentService.addAppointment(1L,appointmentDto))
+        assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Invalid startDate time");
     }
+
     @Test
     void addAppointment_IncorrectMinutesInEndDate_CorrectException() {
         AppointmentDto appointmentDto = new AppointmentDto();
-        LocalDateTime startTime = LocalDateTime.of(2025,11,21,15,0);
+        LocalDateTime startTime = LocalDateTime.now().plusHours(2).withMinute(0);
         appointmentDto.setStartDate(startTime);
-        LocalDateTime endTime = LocalDateTime.of(2025,11,21,15,5);
+        LocalDateTime endTime = LocalDateTime.now().plusHours(3).withMinute(5);
         appointmentDto.setEndDate(endTime);
 
         //when i then
-        assertThatThrownBy(() -> appointmentService.addAppointment(1L,appointmentDto))
+        assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Invalid endDate time");
     }
+
     @Test
     void addAppointment_startDateBeforeCurrent_CorrectException() {
         AppointmentDto appointmentDto = new AppointmentDto();
-        LocalDateTime startTime = LocalDateTime.of(2023,11,21,15,0);
+        LocalDateTime startTime = LocalDateTime.now().minusDays(1).withMinute(0);
         appointmentDto.setStartDate(startTime);
-        LocalDateTime endTime = LocalDateTime.of(2025,11,21,15,0);
+        LocalDateTime endTime = LocalDateTime.now().plusDays(1).withMinute(0);
         appointmentDto.setEndDate(endTime);
 
         //when i then
-        assertThatThrownBy(() -> appointmentService.addAppointment(1L,appointmentDto))
+        assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Appointment should be after active date");
     }
+
     @Test
     void addAppointment_endDateBeforeStartDate_CorrectException() {
         AppointmentDto appointmentDto = new AppointmentDto();
-        LocalDateTime startTime = LocalDateTime.of(2025,11,21,15,0);
+        LocalDateTime startTime = LocalDateTime.now().plusDays(1).withMinute(0);
         appointmentDto.setStartDate(startTime);
-        LocalDateTime endTime = LocalDateTime.of(2024,11,21,15,0);
+        LocalDateTime endTime = LocalDateTime.now().plusDays(1).minusHours(1).withMinute(0);
         appointmentDto.setEndDate(endTime);
 
         //when i then
-        assertThatThrownBy(() -> appointmentService.addAppointment(1L,appointmentDto))
+        assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Start date should be before end date");
     }
+
     @Test
     void addAppointment_endDateEqualsStartDate_CorrectException() {
         AppointmentDto appointmentDto = new AppointmentDto();
-        LocalDateTime startTime = LocalDateTime.of(2025,11,21,15,0);
+        LocalDateTime startTime = LocalDateTime.now().plusDays(1).withMinute(0);
         appointmentDto.setStartDate(startTime);
-        LocalDateTime endTime = LocalDateTime.of(2025,11,21,15,0);
+        LocalDateTime endTime = LocalDateTime.now().plusDays(1).withMinute(0);
         appointmentDto.setEndDate(endTime);
 
         //when i then
-        assertThatThrownBy(() -> appointmentService.addAppointment(1L,appointmentDto))
+        assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Start date and end date shouldn't be the same");
     }
+
     @Test
     void addAppointment_nonExistentDoctor_CorrectException() {
         AppointmentDto appointmentDto = new AppointmentDto();
-        LocalDateTime startTime = LocalDateTime.of(2025,11,21,15,0);
+        LocalDateTime startTime = LocalDateTime.now().plusDays(1).withMinute(0);
         appointmentDto.setStartDate(startTime);
-        LocalDateTime endTime = LocalDateTime.of(2026,11,21,15,0);
+        LocalDateTime endTime = LocalDateTime.now().plusDays(1).plusHours(1).withMinute(0);
         appointmentDto.setEndDate(endTime);
         when(doctorRepository.findById(1L)).thenReturn(Optional.empty());
         //when i then
-        assertThatThrownBy(() -> appointmentService.addAppointment(1L,appointmentDto))
+        assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Doctor doesn't exist");
     }
@@ -178,32 +189,32 @@ public class AppointmentServiceTest {
     @Test
     void addAppointment_doctorHaveAppointmentOnSetTime_CorrectException() {
         AppointmentDto appointmentDto = new AppointmentDto();
-        LocalDateTime startTime = LocalDateTime.of(2025,11,21,15,0);
+        LocalDateTime startTime = LocalDateTime.now().plusDays(1).withMinute(0);
         appointmentDto.setStartDate(startTime);
-        LocalDateTime endTime = LocalDateTime.of(2026,11,21,15,0);
+        LocalDateTime endTime = LocalDateTime.now().plusDays(1).plusHours(1).withMinute(0);
         appointmentDto.setEndDate(endTime);
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(new Doctor()));
         List<Appointment> list = new ArrayList<>();
         list.add(new Appointment());
         list.add(new Appointment());
-        when(appointmentRepository.getBetweenTime(1L,startTime,endTime)).thenReturn(list);
+        when(appointmentRepository.getBetweenTime(1L, startTime, endTime)).thenReturn(list);
         //when i then
-        assertThatThrownBy(() -> appointmentService.addAppointment(1L,appointmentDto))
+        assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Doctor already have appointment on set time");
     }
+
     @Test
     void addAppointment_AppointmentAdded_ReturnAppointmentDto() {
         AppointmentDto appointmentDto = new AppointmentDto();
-        LocalDateTime startTime = LocalDateTime.of(2025,11,21,15,0);
+        LocalDateTime startTime = LocalDateTime.now().plusDays(1).withMinute(0);
         appointmentDto.setStartDate(startTime);
-        LocalDateTime endTime = LocalDateTime.of(2026,11,21,15,0);
+        LocalDateTime endTime = LocalDateTime.now().plusDays(1).plusHours(1).withMinute(0);
         appointmentDto.setEndDate(endTime);
         Doctor doctor = new Doctor();
         doctor.setId(1L);
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
-        when(appointmentRepository.getBetweenTime(1L,startTime,endTime)).thenReturn(new ArrayList<>());
-
+        when(appointmentRepository.getBetweenTime(1L, startTime, endTime)).thenReturn(new ArrayList<>());
         AppointmentDto expectedResult = new AppointmentDto();
         expectedResult.setStartDate(startTime);
         expectedResult.setEndDate(endTime);
@@ -211,9 +222,8 @@ public class AppointmentServiceTest {
         doctorSimpleDto.setId(1L);
         expectedResult.setDoctor(doctorSimpleDto);
 
-        AppointmentDto result = appointmentService.addAppointment(1L,appointmentDto);
+        AppointmentDto result = appointmentService.addAppointment(1L, appointmentDto);
 
         assertThat(result).isEqualTo(expectedResult);
-
     }
 }

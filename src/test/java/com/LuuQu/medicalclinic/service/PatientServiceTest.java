@@ -1,5 +1,6 @@
 package com.LuuQu.medicalclinic.service;
 
+import com.LuuQu.medicalclinic.factory.TestData;
 import com.LuuQu.medicalclinic.mapper.PatientMapper;
 import com.LuuQu.medicalclinic.model.dto.PatientDto;
 import com.LuuQu.medicalclinic.model.entity.Patient;
@@ -11,11 +12,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class PatientServiceTest {
     private PatientService patientService;
@@ -31,6 +35,18 @@ public class PatientServiceTest {
     }
 
     @Test
+    void getPatients_getDoctorList_dtoListReturned() {
+        List<Patient> list = TestData.PatientFactory.getList();
+        Pageable pageable = PageRequest.of(0, 10);
+        when(patientRepository.findAll(pageable)).thenReturn(new PageImpl<>(list));
+        List<PatientDto> expectedResult = TestData.PatientDtoFactory.getList();
+
+        List<PatientDto> result = patientService.getPatients(pageable);
+
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
     void getPatient_noPatientInDb_CorrectException() {
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -42,7 +58,7 @@ public class PatientServiceTest {
 
     @Test
     void getPatient_patientFound_DtoReturned() {
-        when(patientRepository.findById(1L)).thenReturn(setPatientOptional());
+        when(patientRepository.findById(1L)).thenReturn(Optional.of(TestData.PatientFactory.get(1L)));
         PatientDto expectedResult = new PatientDto();
         expectedResult.setId(1L);
 
@@ -81,6 +97,24 @@ public class PatientServiceTest {
     }
 
     @Test
+    void deletePatient_patientInDb_PatientDeleted() {
+        when(patientRepository.findById(1L)).thenReturn(Optional.of(new Patient()));
+
+        patientService.deletePatient(1L);
+
+        verify(patientRepository, times(1)).delete(new Patient());
+    }
+
+    @Test
+    void deletePatient_noPatientInDb_functionReturned() {
+        when(patientRepository.findById(1L)).thenReturn(Optional.empty());
+
+        patientService.deletePatient(1L);
+
+        verify(patientRepository, times(0)).delete(new Patient());
+    }
+
+    @Test
     void editPatient_noPatientInDb_CorrectException() {
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -92,10 +126,9 @@ public class PatientServiceTest {
 
     @Test
     void editPatient_patientInDb_DtoReturned() {
-        when(patientRepository.findById(1L)).thenReturn(setPatientOptional());
-        PatientDto patientDto = getPatientDto();
-        PatientDto expectedResult = getPatientDto();
-        expectedResult.setId(1L);
+        when(patientRepository.findById(1L)).thenReturn(Optional.of(TestData.PatientFactory.get(1L)));
+        PatientDto patientDto = TestData.PatientDtoFactory.get();
+        PatientDto expectedResult = TestData.PatientDtoFactory.get(1L);
 
         PatientDto result = patientService.editPatient(1L, patientDto);
 
@@ -128,7 +161,7 @@ public class PatientServiceTest {
         String password = "password";
         PatientDto patientPassword = new PatientDto();
         patientPassword.setPassword(password);
-        when(patientRepository.findById(1L)).thenReturn(setPatientOptional());
+        when(patientRepository.findById(1L)).thenReturn(Optional.of(TestData.PatientFactory.get(1L)));
         PatientDto expectedResult = new PatientDto();
         expectedResult.setPassword(password);
         expectedResult.setId(1L);
@@ -136,23 +169,5 @@ public class PatientServiceTest {
         PatientDto result = patientService.editPassword(1L, patientPassword);
 
         Assertions.assertEquals(result, expectedResult);
-    }
-
-    Optional<Patient> setPatientOptional() {
-        Patient patient = new Patient();
-        patient.setId(1L);
-        return Optional.of(patient);
-    }
-
-    PatientDto getPatientDto() {
-        PatientDto patientDto = new PatientDto();
-        patientDto.setEmail("email");
-        patientDto.setPassword("password");
-        patientDto.setIdCardNo("idCardNo");
-        patientDto.setFirstName("firstName");
-        patientDto.setLastName("lastName");
-        patientDto.setPhoneNumber("123123123");
-        patientDto.setBirthday(LocalDate.of(2024, 12, 12));
-        return patientDto;
     }
 }

@@ -1,5 +1,6 @@
 package com.LuuQu.medicalclinic.service;
 
+import com.LuuQu.medicalclinic.factory.TestData;
 import com.LuuQu.medicalclinic.mapper.DoctorMapper;
 import com.LuuQu.medicalclinic.mapper.FacilityMapper;
 import com.LuuQu.medicalclinic.model.dto.FacilityDto;
@@ -10,11 +11,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class FacilityServiceTest {
     private FacilityService facilityService;
@@ -30,6 +35,18 @@ public class FacilityServiceTest {
     }
 
     @Test
+    void getFacilities_getFacilityList_dtoListReturned() {
+        List<Facility> list = TestData.FacilityFactory.getList();
+        Pageable pageable = PageRequest.of(0, 10);
+        when(facilityRepository.findAll(pageable)).thenReturn(new PageImpl<>(list));
+        List<FacilityDto> expectedResult = TestData.FacilityDtoFactory.getList();
+
+        List<FacilityDto> result = facilityService.getFacilities(pageable);
+
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
     void getFacility_noFacilityInDb_CorrectException() {
         when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -41,8 +58,8 @@ public class FacilityServiceTest {
 
     @Test
     void getFacility_correctApproach_DtoReturned() {
-        when(facilityRepository.findById(1L)).thenReturn(getFacilityOptional());
-        FacilityDto expectedResult = getFacilityDto(1L);
+        when(facilityRepository.findById(1L)).thenReturn(Optional.of(TestData.FacilityFactory.get()));
+        FacilityDto expectedResult = TestData.FacilityDtoFactory.get(1L);
 
         FacilityDto result = facilityService.getFacility(1L);
 
@@ -51,9 +68,9 @@ public class FacilityServiceTest {
 
     @Test
     void addFacility_correctApproach_DtoReturned() {
-        FacilityDto result = facilityService.addFacility(getFacilityDto(1L));
+        FacilityDto result = facilityService.addFacility(TestData.FacilityDtoFactory.get(1L));
 
-        Assertions.assertEquals(getFacilityDto(1L), result);
+        Assertions.assertEquals(TestData.FacilityDtoFactory.get(1L), result);
     }
 
     @Test
@@ -68,35 +85,32 @@ public class FacilityServiceTest {
 
     @Test
     void editFacility_correctApproach_DtoReturned() {
-        FacilityDto facilityDto = getFacilityDto(null);
+        FacilityDto facilityDto = TestData.FacilityDtoFactory.get(null);
         Facility facility = new Facility();
         facility.setId(1L);
         when(facilityRepository.findById(1L)).thenReturn(Optional.of(facility));
 
         FacilityDto result = facilityService.editFacility(1L, facilityDto);
 
-        Assertions.assertEquals(getFacilityDto(1L), result);
+        Assertions.assertEquals(TestData.FacilityDtoFactory.get(1L), result);
     }
 
-    Optional<Facility> getFacilityOptional() {
-        Facility facility = new Facility();
-        facility.setId(1L);
-        facility.setName("Name");
-        facility.setCity("City");
-        facility.setZipCode("zipCode");
-        facility.setStreet("street");
-        facility.setBuildingNo("123");
-        return Optional.of(facility);
+    @Test
+    void deleteFacility_facilityInDb_facilityDeleted() {
+        Facility facility = TestData.FacilityFactory.get(1L);
+        when(facilityRepository.findById(1L)).thenReturn(Optional.of(facility));
+
+        facilityService.deleteFacility(1L);
+
+        verify(facilityRepository, times(1)).delete(facility);
     }
 
-    FacilityDto getFacilityDto(Long id) {
-        FacilityDto facilityDto = new FacilityDto();
-        facilityDto.setId(id);
-        facilityDto.setName("Name");
-        facilityDto.setCity("City");
-        facilityDto.setZipCode("zipCode");
-        facilityDto.setStreet("street");
-        facilityDto.setBuildingNo("123");
-        return facilityDto;
+    @Test
+    void deleteFacility_noFacilityInDb_functionReturned() {
+        when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
+
+        facilityService.deleteFacility(1L);
+
+        verify(facilityRepository, times(0)).delete(new Facility());
     }
 }
