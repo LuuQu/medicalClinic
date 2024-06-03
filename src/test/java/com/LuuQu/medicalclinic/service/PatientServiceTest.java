@@ -1,6 +1,6 @@
 package com.LuuQu.medicalclinic.service;
 
-import com.LuuQu.medicalclinic.factory.TestData;
+import com.LuuQu.medicalclinic.testHelper.TestData;
 import com.LuuQu.medicalclinic.mapper.PatientMapper;
 import com.LuuQu.medicalclinic.model.dto.PatientDto;
 import com.LuuQu.medicalclinic.model.entity.Patient;
