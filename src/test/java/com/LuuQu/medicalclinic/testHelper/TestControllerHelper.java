@@ -4,9 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 
 public class TestControllerHelper {
     public static String getObjectAsString(Object object, ObjectMapper om) {
@@ -21,9 +18,7 @@ public class TestControllerHelper {
     }
 
     public static String removeEmptyLines(String string) {
-        return Arrays.stream(string.split("\r\n"))
-                .filter(line -> !line.trim().isEmpty())
-                .collect(Collectors.joining(""))
+        return string.replaceAll("\r\n", "")
                 .replaceAll(" ", "");
     }
 }
