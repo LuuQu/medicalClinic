@@ -77,7 +77,7 @@ public class DoctorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         Assertions.assertEquals(expectedResult, result.getResponse().getContentAsString());
@@ -106,7 +106,7 @@ public class DoctorControllerTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.delete("/doctors/{id}", 1L))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(doctorService, times(1)).deleteDoctor(1L);
     }

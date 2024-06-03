@@ -3,6 +3,7 @@ package com.LuuQu.medicalclinic.controller;
 import com.LuuQu.medicalclinic.model.dto.AppointmentDto;
 import com.LuuQu.medicalclinic.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,7 @@ public class AppointmentController {
     }
 
     @PostMapping("/{doctorId}")
+    @ResponseStatus(HttpStatus.CREATED)
     public AppointmentDto addAppointment(@PathVariable Long doctorId, @RequestBody AppointmentDto appointmentDto) {
         return appointmentService.addAppointment(doctorId, appointmentDto);
     }

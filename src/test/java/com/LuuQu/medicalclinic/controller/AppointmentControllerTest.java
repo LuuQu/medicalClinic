@@ -48,7 +48,7 @@ public class AppointmentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         Assertions.assertEquals(expectedResult, result.getResponse().getContentAsString());
