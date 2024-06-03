@@ -1,13 +1,12 @@
-package com.LuuQu.medicalclinic.factory;
+package com.LuuQu.medicalclinic.testHelper;
 
-import com.LuuQu.medicalclinic.model.dto.DoctorDto;
-import com.LuuQu.medicalclinic.model.dto.FacilityDto;
-import com.LuuQu.medicalclinic.model.dto.PatientDto;
+import com.LuuQu.medicalclinic.model.dto.*;
 import com.LuuQu.medicalclinic.model.entity.Doctor;
 import com.LuuQu.medicalclinic.model.entity.Facility;
 import com.LuuQu.medicalclinic.model.entity.Patient;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +68,36 @@ public class TestData {
             facilityDto.setStreet("street");
             facilityDto.setBuildingNo("123");
             return facilityDto;
+        }
+    }
+
+    public static class FacilitySimpleDtoFactory {
+        public static List<FacilitySimpleDto> getList(int amount) {
+            List<FacilitySimpleDto> list = new ArrayList<>();
+            for (int i = 0; i < amount; i++) {
+                list.add(get((long) i));
+            }
+            return list;
+        }
+
+        public static List<FacilitySimpleDto> getList() {
+            return getList(2);
+        }
+
+        public static FacilitySimpleDto get(Long id) {
+            FacilitySimpleDto facilitySimpleDto = get();
+            facilitySimpleDto.setId(id);
+            return facilitySimpleDto;
+        }
+
+        public static FacilitySimpleDto get() {
+            FacilitySimpleDto facilitySimpleDto = new FacilitySimpleDto();
+            facilitySimpleDto.setName("name");
+            facilitySimpleDto.setCity("city");
+            facilitySimpleDto.setZipCode("zipCode");
+            facilitySimpleDto.setStreet("street");
+            facilitySimpleDto.setBuildingNo("1234");
+            return facilitySimpleDto;
         }
     }
 
@@ -193,6 +222,63 @@ public class TestData {
             doctorDto.setLastName("lastName");
             doctorDto.setSpecialization("specialization");
             return doctorDto;
+        }
+    }
+
+    public static class DoctorSimpleDtoFactory {
+        public static List<DoctorSimpleDto> getList(int amount) {
+            List<DoctorSimpleDto> list = new ArrayList<>();
+            for (int i = 0; i < amount; i++) {
+                list.add(get((long) i));
+            }
+            return list;
+        }
+
+        public static List<DoctorSimpleDto> getList() {
+            return getList(2);
+        }
+
+        public static DoctorSimpleDto get(Long id) {
+            DoctorSimpleDto doctorSimpleDto = get();
+            doctorSimpleDto.setId(id);
+            return doctorSimpleDto;
+        }
+
+        public static DoctorSimpleDto get() {
+            DoctorSimpleDto doctorSimpleDto = new DoctorSimpleDto();
+            doctorSimpleDto.setEmail("email");
+            doctorSimpleDto.setPassword("password");
+            doctorSimpleDto.setFirstName("firstName");
+            doctorSimpleDto.setLastName("lastName");
+            doctorSimpleDto.setSpecialization("specialization");
+            return doctorSimpleDto;
+        }
+    }
+
+    public static class AppointmentDtoFactory {
+        public static List<AppointmentDto> getList(int amount) {
+            List<AppointmentDto> list = new ArrayList<>();
+            for (int i = 0; i < amount; i++) {
+                list.add(get((long) i));
+            }
+            return list;
+        }
+
+        public static List<AppointmentDto> getList() {
+            return getList(2);
+        }
+
+        public static AppointmentDto get(Long id) {
+            AppointmentDto appointmentDto = get();
+            appointmentDto.setId(id);
+            return appointmentDto;
+        }
+
+        public static AppointmentDto get() {
+            AppointmentDto appointmentDto = new AppointmentDto();
+            appointmentDto.setStartDate(LocalDateTime.now().plusDays(1).withMinute(0));
+            appointmentDto.setEndDate(LocalDateTime.now().plusDays(1).plusHours(1).withMinute(0));
+            return appointmentDto;
         }
     }
 }
