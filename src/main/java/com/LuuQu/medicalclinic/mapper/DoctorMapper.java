@@ -20,6 +20,12 @@ public interface DoctorMapper {
     @Mapping(target = "user.password", source = "password")
     Doctor toEntity(DoctorDto doctorDto);
 
+    @Mapping(target = "user.firstName", source = "firstName")
+    @Mapping(target = "user.lastName", source = "lastName")
+    @Mapping(target = "user.email", source = "email")
+    @Mapping(target = "user.password", source = "password")
+    Doctor toEntity(DoctorSimpleDto doctorSimpleDto);
+
     @Mapping(target = "firstName", source = "user.firstName")
     @Mapping(target = "lastName", source = "user.lastName")
     @Mapping(target = "email", source = "user.email")

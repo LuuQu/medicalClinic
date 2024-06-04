@@ -1,6 +1,7 @@
 package com.LuuQu.medicalclinic.testHelper;
 
 import com.LuuQu.medicalclinic.model.dto.*;
+import com.LuuQu.medicalclinic.model.entity.Appointment;
 import com.LuuQu.medicalclinic.model.entity.Doctor;
 import com.LuuQu.medicalclinic.model.entity.Facility;
 import com.LuuQu.medicalclinic.model.entity.Patient;
@@ -34,8 +35,8 @@ public class TestData {
             Facility facility = new Facility();
             facility.setName("Name");
             facility.setCity("City");
-            facility.setZipCode("zipCode");
-            facility.setStreet("street");
+            facility.setZipCode("ZipCode");
+            facility.setStreet("Street");
             facility.setBuildingNo("123");
             return facility;
         }
@@ -64,8 +65,8 @@ public class TestData {
             FacilityDto facilityDto = new FacilityDto();
             facilityDto.setName("Name");
             facilityDto.setCity("City");
-            facilityDto.setZipCode("zipCode");
-            facilityDto.setStreet("street");
+            facilityDto.setZipCode("ZipCode");
+            facilityDto.setStreet("Street");
             facilityDto.setBuildingNo("123");
             return facilityDto;
         }
@@ -92,11 +93,11 @@ public class TestData {
 
         public static FacilitySimpleDto get() {
             FacilitySimpleDto facilitySimpleDto = new FacilitySimpleDto();
-            facilitySimpleDto.setName("name");
-            facilitySimpleDto.setCity("city");
-            facilitySimpleDto.setZipCode("zipCode");
-            facilitySimpleDto.setStreet("street");
-            facilitySimpleDto.setBuildingNo("1234");
+            facilitySimpleDto.setName("Name");
+            facilitySimpleDto.setCity("City");
+            facilitySimpleDto.setZipCode("ZipCode");
+            facilitySimpleDto.setStreet("Street");
+            facilitySimpleDto.setBuildingNo("123");
             return facilitySimpleDto;
         }
     }
@@ -276,9 +277,35 @@ public class TestData {
 
         public static AppointmentDto get() {
             AppointmentDto appointmentDto = new AppointmentDto();
-            appointmentDto.setStartDate(LocalDateTime.now().plusDays(1).withMinute(0));
-            appointmentDto.setEndDate(LocalDateTime.now().plusDays(1).plusHours(1).withMinute(0));
+            appointmentDto.setStartDate(LocalDateTime.now().plusDays(1).withMinute(0).withSecond(0).withNano(0));
+            appointmentDto.setEndDate(LocalDateTime.now().plusDays(1).plusHours(1).withMinute(0).withSecond(0).withNano(0));
             return appointmentDto;
+        }
+    }
+    public static class AppointmentFactory {
+        public static List<Appointment> getList(int amount) {
+            List<Appointment> list = new ArrayList<>();
+            for (int i = 0; i < amount; i++) {
+                list.add(get((long) i));
+            }
+            return list;
+        }
+
+        public static List<Appointment> getList() {
+            return getList(2);
+        }
+
+        public static Appointment get(Long id) {
+            Appointment appointment = get();
+            appointment.setId(id);
+            return appointment;
+        }
+
+        public static Appointment get() {
+            Appointment appointment = new Appointment();
+            appointment.setStartDate(LocalDateTime.now().plusDays(1).withMinute(0).withSecond(0).withNano(0));
+            appointment.setEndDate(LocalDateTime.now().plusDays(1).plusHours(1).withMinute(0).withSecond(0).withNano(0));
+            return appointment;
         }
     }
 }
