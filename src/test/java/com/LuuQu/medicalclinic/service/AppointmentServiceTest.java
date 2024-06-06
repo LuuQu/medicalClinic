@@ -1,5 +1,7 @@
 package com.LuuQu.medicalclinic.service;
 
+import com.LuuQu.medicalclinic.exception.AppointmentException;
+import com.LuuQu.medicalclinic.exception.NotFoundException;
 import com.LuuQu.medicalclinic.mapper.AppointmentMapper;
 import com.LuuQu.medicalclinic.mapper.DoctorMapper;
 import com.LuuQu.medicalclinic.mapper.PatientMapper;
@@ -50,7 +52,7 @@ public class AppointmentServiceTest {
         when(appointmentRepository.findById(1L)).thenReturn(Optional.empty());
         //when i then
         assertThatThrownBy(() -> appointmentService.addPatient(1L, 1L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Appointment not found");
     }
 
@@ -64,7 +66,7 @@ public class AppointmentServiceTest {
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
         //when i then
         assertThatThrownBy(() -> appointmentService.addPatient(1L, 1L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(AppointmentException.class)
                 .hasMessageContaining("Appointment already have patient");
     }
 
@@ -77,7 +79,7 @@ public class AppointmentServiceTest {
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());
         //when i then
         assertThatThrownBy(() -> appointmentService.addPatient(1L, 1L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Patient not found");
     }
 
@@ -112,7 +114,7 @@ public class AppointmentServiceTest {
 
         //when i then
         assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(AppointmentException.class)
                 .hasMessageContaining("Invalid startDate time");
     }
 
@@ -126,7 +128,7 @@ public class AppointmentServiceTest {
 
         //when i then
         assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(AppointmentException.class)
                 .hasMessageContaining("Invalid endDate time");
     }
 
@@ -140,7 +142,7 @@ public class AppointmentServiceTest {
 
         //when i then
         assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(AppointmentException.class)
                 .hasMessageContaining("Appointment should be after active date");
     }
 
@@ -154,7 +156,7 @@ public class AppointmentServiceTest {
 
         //when i then
         assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(AppointmentException.class)
                 .hasMessageContaining("Start date should be before end date");
     }
 
@@ -168,7 +170,7 @@ public class AppointmentServiceTest {
 
         //when i then
         assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(AppointmentException.class)
                 .hasMessageContaining("Start date and end date shouldn't be the same");
     }
 
@@ -182,7 +184,7 @@ public class AppointmentServiceTest {
         when(doctorRepository.findById(1L)).thenReturn(Optional.empty());
         //when i then
         assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Doctor doesn't exist");
     }
 
@@ -200,7 +202,7 @@ public class AppointmentServiceTest {
         when(appointmentRepository.getBetweenTime(1L, startTime, endTime)).thenReturn(list);
         //when i then
         assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(AppointmentException.class)
                 .hasMessageContaining("Doctor already have appointment on set time");
     }
 

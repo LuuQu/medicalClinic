@@ -1,5 +1,6 @@
 package com.LuuQu.medicalclinic.service;
 
+import com.LuuQu.medicalclinic.exception.NotFoundException;
 import com.LuuQu.medicalclinic.mapper.DoctorMapper;
 import com.LuuQu.medicalclinic.model.dto.DoctorDto;
 import com.LuuQu.medicalclinic.model.entity.Doctor;
@@ -28,7 +29,7 @@ public class DoctorService {
 
     public DoctorDto getDoctor(Long id) {
         return doctorMapper.toDto(doctorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Non-existent doctor")));
+                .orElseThrow(() -> new NotFoundException("Non-existent doctor")));
     }
 
     @Transactional
@@ -41,7 +42,7 @@ public class DoctorService {
     @Transactional
     public DoctorDto editDoctor(Long id, DoctorDto doctorDto) {
         Doctor doctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Non-existent doctor"));
+                .orElseThrow(() -> new NotFoundException("Non-existent doctor"));
         doctor.update(doctorMapper.toEntity(doctorDto));
         doctorRepository.save(doctor);
         return doctorMapper.toDto(doctor);
@@ -57,9 +58,9 @@ public class DoctorService {
 
     public DoctorDto addDoctorFacility(Long doctorId, Long facilityId) {
         Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new IllegalArgumentException("Non-existent doctor"));
+                .orElseThrow(() -> new NotFoundException("Non-existent doctor"));
         Facility facility = facilityRepository.findById(facilityId)
-                .orElseThrow(() -> new IllegalArgumentException("Non-existent facility"));
+                .orElseThrow(() -> new NotFoundException("Non-existent facility"));
         doctor.getFacilities().add(facility);
         doctorRepository.save(doctor);
         return doctorMapper.toDto(doctor);
@@ -67,9 +68,9 @@ public class DoctorService {
 
     public DoctorDto removeDoctorFacility(Long doctorId, Long facilityId) {
         Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new IllegalArgumentException("Non-existent doctor"));
+                .orElseThrow(() -> new NotFoundException("Non-existent doctor"));
         Facility facility = facilityRepository.findById(facilityId)
-                .orElseThrow(() -> new IllegalArgumentException("Non-existent facility"));
+                .orElseThrow(() -> new NotFoundException("Non-existent facility"));
         doctor.getFacilities().remove(facility);
         doctorRepository.save(doctor);
         return doctorMapper.toDto(doctor);

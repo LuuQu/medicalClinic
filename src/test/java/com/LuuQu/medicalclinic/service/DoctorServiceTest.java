@@ -1,5 +1,6 @@
 package com.LuuQu.medicalclinic.service;
 
+import com.LuuQu.medicalclinic.exception.NotFoundException;
 import com.LuuQu.medicalclinic.testHelper.TestData;
 import com.LuuQu.medicalclinic.mapper.DoctorMapper;
 import com.LuuQu.medicalclinic.model.dto.DoctorDto;
@@ -51,7 +52,7 @@ public class DoctorServiceTest {
     void getDoctor_noDoctorInDb_CorrectException() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.empty());
 
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(NotFoundException.class,
                 () -> doctorService.getDoctor(1L));
 
         Assertions.assertEquals(exception.getMessage(), "Non-existent doctor");
@@ -82,7 +83,7 @@ public class DoctorServiceTest {
     void editDoctor_noDoctorInDb_CorrectException() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.empty());
 
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(NotFoundException.class,
                 () -> doctorService.editDoctor(1L, new DoctorDto()));
 
         Assertions.assertEquals(exception.getMessage(), "Non-existent doctor");
@@ -123,7 +124,7 @@ public class DoctorServiceTest {
     void addDoctorFacility_noDoctorInDb_CorrectException() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.empty());
 
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(NotFoundException.class,
                 () -> doctorService.addDoctorFacility(1L, 1L));
 
         Assertions.assertEquals(exception.getMessage(), "Non-existent doctor");
@@ -134,7 +135,7 @@ public class DoctorServiceTest {
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(new Doctor()));
         when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
 
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(NotFoundException.class,
                 () -> doctorService.addDoctorFacility(1L, 1L));
 
         Assertions.assertEquals(exception.getMessage(), "Non-existent facility");
@@ -167,7 +168,7 @@ public class DoctorServiceTest {
     void removeDoctorFacility_noDoctorInDb_CorrectException() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.empty());
 
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(NotFoundException.class,
                 () -> doctorService.removeDoctorFacility(1L, 1L));
 
         Assertions.assertEquals(exception.getMessage(), "Non-existent doctor");
@@ -178,7 +179,7 @@ public class DoctorServiceTest {
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(new Doctor()));
         when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
 
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(NotFoundException.class,
                 () -> doctorService.removeDoctorFacility(1L, 1L));
 
         Assertions.assertEquals(exception.getMessage(), "Non-existent facility");

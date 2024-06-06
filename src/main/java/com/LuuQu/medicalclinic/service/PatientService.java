@@ -1,5 +1,7 @@
 package com.LuuQu.medicalclinic.service;
 
+import com.LuuQu.medicalclinic.exception.NotFoundException;
+import com.LuuQu.medicalclinic.exception.PatientException;
 import com.LuuQu.medicalclinic.mapper.PatientMapper;
 import com.LuuQu.medicalclinic.model.dto.PatientDto;
 import com.LuuQu.medicalclinic.model.entity.Patient;
@@ -28,14 +30,14 @@ public class PatientService {
 
     public PatientDto getPatient(Long id) {
         Patient patient = patientRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Patient does not exist"));
+                .orElseThrow(() -> new NotFoundException("Patient does not exist"));
         return patientMapper.toDto(patient);
     }
 
     @Transactional
     public PatientDto addPatient(PatientDto patientDto) {
         if (userRepository.findByEmail(patientDto.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("User with given e-mail already exist");
+            throw new PatientException("User with given e-mail already exist");
         }
         Patient patient = patientMapper.toEntity(patientDto);
         patientRepository.save(patient);
@@ -53,7 +55,7 @@ public class PatientService {
     @Transactional
     public PatientDto editPatient(Long id, PatientDto patientDto) {
         Patient patient = patientRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Patient does not exist"));
+                .orElseThrow(() -> new NotFoundException("Patient does not exist"));
         patient.update(patientMapper.toEntity(patientDto));
         patientRepository.save(patient);
         return patientMapper.toDto(patient);
@@ -62,10 +64,10 @@ public class PatientService {
     @Transactional
     public PatientDto editPassword(Long id, PatientDto patientPassword) {
         if (patientPassword.getPassword() == null) {
-            throw new IllegalArgumentException("Incorrect body");
+            throw new PatientException("Incorrect body");
         }
         Patient patient = patientRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Patient does not exist"));
+                .orElseThrow(() -> new NotFoundException("Patient does not exist"));
         patient.getUser().setPassword(patientPassword.getPassword());
         patientRepository.save(patient);
         return patientMapper.toDto(patient);

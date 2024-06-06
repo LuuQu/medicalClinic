@@ -1,5 +1,6 @@
 package com.LuuQu.medicalclinic.service;
 
+import com.LuuQu.medicalclinic.exception.NotFoundException;
 import com.LuuQu.medicalclinic.mapper.FacilityMapper;
 import com.LuuQu.medicalclinic.model.dto.FacilityDto;
 import com.LuuQu.medicalclinic.model.entity.Facility;
@@ -25,7 +26,7 @@ public class FacilityService {
 
     public FacilityDto getFacility(Long id) {
         return facilityMapper.toDto(facilityRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Non-existent facility")));
+                .orElseThrow(() -> new NotFoundException("Non-existent facility")));
     }
 
     @Transactional
@@ -38,7 +39,7 @@ public class FacilityService {
     @Transactional
     public FacilityDto editFacility(Long id, FacilityDto facilityDto) {
         Facility facility = facilityRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Non-existent facility"));
+                .orElseThrow(() -> new NotFoundException("Non-existent facility"));
         facility.update(facilityMapper.toEntity(facilityDto));
         facilityRepository.save(facility);
         return facilityMapper.toDto(facility);

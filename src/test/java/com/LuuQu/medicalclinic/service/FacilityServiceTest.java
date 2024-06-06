@@ -1,5 +1,6 @@
 package com.LuuQu.medicalclinic.service;
 
+import com.LuuQu.medicalclinic.exception.NotFoundException;
 import com.LuuQu.medicalclinic.testHelper.TestData;
 import com.LuuQu.medicalclinic.mapper.DoctorMapper;
 import com.LuuQu.medicalclinic.mapper.FacilityMapper;
@@ -50,7 +51,7 @@ public class FacilityServiceTest {
     void getFacility_noFacilityInDb_CorrectException() {
         when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
 
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(NotFoundException.class,
                 () -> facilityService.getFacility(1L));
 
         Assertions.assertEquals(exception.getMessage(), "Non-existent facility");
@@ -77,7 +78,7 @@ public class FacilityServiceTest {
     void editFacility_noFacilityInDb_CorrectException() {
         when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
 
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(NotFoundException.class,
                 () -> facilityService.editFacility(1L, new FacilityDto()));
 
         Assertions.assertEquals(exception.getMessage(), "Non-existent facility");

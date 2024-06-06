@@ -1,5 +1,7 @@
 package com.LuuQu.medicalclinic.service;
 
+import com.LuuQu.medicalclinic.exception.AppointmentException;
+import com.LuuQu.medicalclinic.exception.NotFoundException;
 import com.LuuQu.medicalclinic.mapper.AppointmentMapper;
 import com.LuuQu.medicalclinic.model.dto.AppointmentDto;
 import com.LuuQu.medicalclinic.model.entity.Appointment;
@@ -25,12 +27,12 @@ public class AppointmentService {
     @Transactional
     public AppointmentDto addPatient(Long patientId, Long appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Appointment not found"));
+                .orElseThrow(() -> new NotFoundException("Appointment not found"));
         if (!appointment.isFree()) {
-            throw new IllegalArgumentException("Appointment already have patient");
+            throw new AppointmentException("Appointment already have patient");
         }
         Patient patient = patientRepository.findById(patientId)
-                .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
+                .orElseThrow(() -> new NotFoundException("Patient not found"));
         appointment.setPatient(patient);
         appointmentRepository.save(appointment);
         return appointmentMapper.toDto(appointment);
@@ -39,24 +41,24 @@ public class AppointmentService {
     @Transactional
     public AppointmentDto addAppointment(Long doctorId, AppointmentDto appointmentDto) {
         if (appointmentDto.getStartDate().getMinute() % 15 != 0) {
-            throw new IllegalArgumentException("Invalid startDate time");
+            throw new AppointmentException("Invalid startDate time");
         }
         if (appointmentDto.getEndDate().getMinute() % 15 != 0) {
-            throw new IllegalArgumentException("Invalid endDate time");
+            throw new AppointmentException("Invalid endDate time");
         }
         if (appointmentDto.getStartDate().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Appointment should be after active date");
+            throw new AppointmentException("Appointment should be after active date");
         }
         if (appointmentDto.getStartDate().isAfter(appointmentDto.getEndDate())) {
-            throw new IllegalArgumentException("Start date should be before end date");
+            throw new AppointmentException("Start date should be before end date");
         }
         if (appointmentDto.getStartDate().isEqual(appointmentDto.getEndDate())) {
-            throw new IllegalArgumentException("Start date and end date shouldn't be the same");
+            throw new AppointmentException("Start date and end date shouldn't be the same");
         }
         Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new IllegalArgumentException("Doctor doesn't exist"));
+                .orElseThrow(() -> new NotFoundException("Doctor doesn't exist"));
         if (!appointmentRepository.getBetweenTime(doctorId, appointmentDto.getStartDate(), appointmentDto.getEndDate()).isEmpty()) {
-            throw new IllegalArgumentException("Doctor already have appointment on set time");
+            throw new AppointmentException("Doctor already have appointment on set time");
         }
         Appointment appointment = appointmentMapper.toEntity(appointmentDto);
         appointment.setDoctor(doctor);

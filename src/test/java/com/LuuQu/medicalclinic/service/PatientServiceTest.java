@@ -1,5 +1,7 @@
 package com.LuuQu.medicalclinic.service;
 
+import com.LuuQu.medicalclinic.exception.NotFoundException;
+import com.LuuQu.medicalclinic.exception.PatientException;
 import com.LuuQu.medicalclinic.testHelper.TestData;
 import com.LuuQu.medicalclinic.mapper.PatientMapper;
 import com.LuuQu.medicalclinic.model.dto.PatientDto;
@@ -50,7 +52,7 @@ public class PatientServiceTest {
     void getPatient_noPatientInDb_CorrectException() {
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());
 
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(NotFoundException.class,
                 () -> patientService.getPatient(1L));
 
         Assertions.assertEquals(exception.getMessage(), "Patient does not exist");
@@ -76,7 +78,7 @@ public class PatientServiceTest {
         PatientDto patientDto = new PatientDto();
         patientDto.setEmail(email);
 
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(PatientException.class,
                 () -> patientService.addPatient(patientDto));
 
         Assertions.assertEquals(exception.getMessage(), "User with given e-mail already exist");
@@ -118,7 +120,7 @@ public class PatientServiceTest {
     void editPatient_noPatientInDb_CorrectException() {
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());
 
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(NotFoundException.class,
                 () -> patientService.editPatient(1L, new PatientDto()));
 
         Assertions.assertEquals(exception.getMessage(), "Patient does not exist");
@@ -137,7 +139,7 @@ public class PatientServiceTest {
 
     @Test
     void editPassword_EmptyPassword_CorrectException() {
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(PatientException.class,
                 () -> patientService.editPassword(1L, new PatientDto()));
 
         Assertions.assertEquals(exception.getMessage(), "Incorrect body");
@@ -150,7 +152,7 @@ public class PatientServiceTest {
         patientPassword.setPassword(password);
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());
 
-        var exception = Assertions.assertThrows(IllegalArgumentException.class,
+        var exception = Assertions.assertThrows(NotFoundException.class,
                 () -> patientService.editPassword(1L, patientPassword));
 
         Assertions.assertEquals(exception.getMessage(), "Patient does not exist");
