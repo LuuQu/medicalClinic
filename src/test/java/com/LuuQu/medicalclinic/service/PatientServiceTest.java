@@ -111,9 +111,10 @@ public class PatientServiceTest {
     void deletePatient_noPatientInDb_functionReturned() {
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());
 
-        patientService.deletePatient(1L);
+        var exception = Assertions.assertThrows(NotFoundException.class,
+                () -> patientService.deletePatient(1L));
 
-        verify(patientRepository, times(0)).delete(new Patient());
+        Assertions.assertEquals(exception.getMessage(), "Patient not found");
     }
 
     @Test

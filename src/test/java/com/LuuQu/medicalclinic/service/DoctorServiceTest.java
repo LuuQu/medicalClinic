@@ -115,9 +115,10 @@ public class DoctorServiceTest {
     void deleteDoctor_noDoctorInDb_functionReturned() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.empty());
 
-        doctorService.deleteDoctor(1L);
+        var exception = Assertions.assertThrows(NotFoundException.class,
+                () -> doctorService.deleteDoctor(1L));
 
-        verify(doctorRepository, times(0)).delete(new Doctor());
+        Assertions.assertEquals(exception.getMessage(), "Doctor not found");
     }
 
     @Test

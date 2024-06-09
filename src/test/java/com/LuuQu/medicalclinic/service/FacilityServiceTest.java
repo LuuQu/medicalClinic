@@ -110,8 +110,9 @@ public class FacilityServiceTest {
     void deleteFacility_noFacilityInDb_functionReturned() {
         when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
 
-        facilityService.deleteFacility(1L);
+        var exception = Assertions.assertThrows(NotFoundException.class,
+                () -> facilityService.deleteFacility(1L));
 
-        verify(facilityRepository, times(0)).delete(new Facility());
+        Assertions.assertEquals(exception.getMessage(), "Facility not found");
     }
 }
