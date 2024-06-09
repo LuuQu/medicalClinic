@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: LuuQu
+      changes:
+        - createTable:
+            tableName: DOCTOR
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_doctor_id
+                  name: id
+                  type: Long
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)
+              - column:
+                  name: specialization
+                  type: varchar(255)
+        - createTable:
+            tableName: FACILITY
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_facility_id
+                  name: id
+                  type: Long
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: city
+                  type: varchar(255)
+              - column:
+                  name: zip_code
+                  type: varchar(255)
+              - column:
+                  name: street
+                  type: varchar(255)
+              - column:
+                  name: building_no
+                  type: varchar(255)
+        - createTable:
+            tableName: DOCTOR_FACILITY
+            column:
+              - column:
+                  name: doctor_id
+                  type: Long
+                  constraints:
+                    primaryKey: true
+                    foreignKeyName: fk_doctor_facility_doctor
+                    references: DOCTOR(id)
+              - column:
+                  name: facility_id
+                  type: Long
+                  constraints:
+                    primaryKey: true
+                    foreignKeyName: fk_doctor_facility_facility
+                    references: FACILITY(id)

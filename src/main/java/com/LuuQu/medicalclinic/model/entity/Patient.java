@@ -16,7 +16,7 @@ public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "ID_CARD_NUMBER")
+    @Column(name = "ID_CARD_NO")
     private String idCardNo;
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;

@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: LuuQu
+      changes:
+        - createTable:
+            tableName: USER_TABLE
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_user_id
+                  name: id
+                  type: Long
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)
+        - dropColumn:
+            tableName: PATIENT
+            columns:
+              - column:
+                  name: email
+              - column:
+                  name: password
+              - column:
+                  name: first_name
+              - column:
+                  name: last_name
+        - addColumn:
+            tableName: PATIENT
+            columns:
+              - column:
+                  name: user_id
+                  type: Long
+                  constraints:
+                    foreignKeyName: fk_patient_user
+                    references: USER_TABLE(id)
+                    onDelete: CASCADE
+        - dropColumn:
+            tableName: DOCTOR
+            columns:
+              - column:
+                  name: email
+              - column:
+                  name: password
+              - column:
+                  name: first_name
+              - column:
+                  name: last_name
+        - addColumn:
+            tableName: DOCTOR
+            columns:
+              - column:
+                  name: user_id
+                  type: Long
+                  constraints:
+                    foreignKeyName: fk_doctor_user
+                    references: USER_TABLE(id)
+                    onDelete: CASCADE

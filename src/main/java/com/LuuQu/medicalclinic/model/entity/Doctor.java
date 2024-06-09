@@ -22,7 +22,7 @@ public class Doctor {
     private String specialization;
     @ManyToMany
     @JoinTable(
-            name = "Doctor_Facility",
+            name = "DOCTOR_FACILITY",
             joinColumns = {@JoinColumn(name = "doctor_id")},
             inverseJoinColumns = {@JoinColumn(name = "facility_id")}
     )

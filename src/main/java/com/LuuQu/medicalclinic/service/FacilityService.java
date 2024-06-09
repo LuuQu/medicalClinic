@@ -49,7 +49,7 @@ public class FacilityService {
     public void deleteFacility(Long id) {
         var facility = facilityRepository.findById(id);
         if (facility.isEmpty()) {
-            return;
+            throw new NotFoundException("Facility not found");
         }
         facilityRepository.delete(facility.get());
     }

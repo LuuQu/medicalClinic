@@ -47,7 +47,7 @@ public class PatientService {
     public void deletePatient(Long id) {
         Optional<Patient> patientOptional = patientRepository.findById(id);
         if (patientOptional.isEmpty()) {
-            return;
+            throw new NotFoundException("Patient not found");
         }
         patientRepository.delete(patientOptional.get());
     }

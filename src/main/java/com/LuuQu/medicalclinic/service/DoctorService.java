@@ -51,7 +51,7 @@ public class DoctorService {
     public void deleteDoctor(Long id) {
         var doctor = doctorRepository.findById(id);
         if(doctor.isEmpty()) {
-            return;
+            throw new NotFoundException("Doctor not found");
         }
         doctorRepository.delete(doctor.get());
     }
