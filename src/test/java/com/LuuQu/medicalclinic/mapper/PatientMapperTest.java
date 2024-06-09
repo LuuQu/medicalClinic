@@ -40,7 +40,18 @@ public class PatientMapperTest {
     void toEntityTest(PatientDto patientDtoToTest, Patient expectedResult) {
         Patient result = patientMapper.toEntity(patientDtoToTest);
 
-        Assertions.assertEquals(expectedResult, result);
+        if (expectedResult == null) {
+            Assertions.assertNull(result);
+            return;
+        }
+        Assertions.assertEquals(expectedResult.getId(), result.getId());
+        Assertions.assertEquals(expectedResult.getIdCardNo(), result.getIdCardNo());
+        Assertions.assertEquals(expectedResult.getPhoneNumber(), result.getPhoneNumber());
+        Assertions.assertEquals(expectedResult.getBirthday(), result.getBirthday());
+        Assertions.assertEquals(expectedResult.getUser().getFirstName(), result.getUser().getFirstName());
+        Assertions.assertEquals(expectedResult.getUser().getLastName(), result.getUser().getLastName());
+        Assertions.assertEquals(expectedResult.getUser().getEmail(), result.getUser().getEmail());
+        Assertions.assertEquals(expectedResult.getUser().getPassword(), result.getUser().getPassword());
     }
 
     private static Stream<Arguments> toEntityTest() {

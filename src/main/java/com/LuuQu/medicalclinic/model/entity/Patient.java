@@ -33,4 +33,34 @@ public class Patient {
         this.phoneNumber = patient.getPhoneNumber();
         this.birthday = patient.getBirthday();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Patient other)) {
+            return false;
+        }
+
+        return id != null &&
+                id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "id=" + id +
+                ", idCardNo='" + idCardNo + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", birthday=" + birthday +
+                ", user=" + user +
+                '}';
+    }
 }

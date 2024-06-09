@@ -16,10 +16,10 @@ databaseChangeLog:
                   type: Long
               - column:
                   name: start_date
-                  type: date
+                  type: datetime
               - column:
                   name: end_date
-                  type: date
+                  type: datetime
               - column:
                   name: patient_id
                   type: Long

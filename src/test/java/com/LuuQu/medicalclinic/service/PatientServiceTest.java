@@ -100,11 +100,13 @@ public class PatientServiceTest {
 
     @Test
     void deletePatient_patientInDb_PatientDeleted() {
-        when(patientRepository.findById(1L)).thenReturn(Optional.of(new Patient()));
+        Patient patient = new Patient();
+        patient.setId(1L);
+        when(patientRepository.findById(1L)).thenReturn(Optional.of(patient));
 
         patientService.deletePatient(1L);
 
-        verify(patientRepository, times(1)).delete(new Patient());
+        verify(patientRepository, times(1)).delete(patient);
     }
 
     @Test

@@ -3,11 +3,9 @@ package com.LuuQu.medicalclinic.model.dto;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
-public class PatientDto {
+public class PatientSimpleDto {
     private Long id;
     private String email;
     private String password;
@@ -16,5 +14,4 @@ public class PatientDto {
     private String lastName;
     private String phoneNumber;
     private LocalDate birthday;
-    private Set<DoctorSimpleDto> doctors = new HashSet<>();
 }
