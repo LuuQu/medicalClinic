@@ -14,11 +14,16 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "DATE")
-    private LocalDateTime date;
+    @Column(name = "START_DATE")
+    private LocalDateTime startDate;
+    @Column(name = "END_DATE")
+    private LocalDateTime endDate;
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
 
     public boolean isFree() {
         return patient == null;

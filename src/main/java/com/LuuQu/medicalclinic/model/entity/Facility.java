@@ -28,7 +28,7 @@ public class Facility {
     private String buildingNo;
     @ManyToMany
     @JoinTable(
-            name = "Doctor_Facility",
+            name = "DOCTOR_FACILITY",
             joinColumns = {@JoinColumn(name = "facility_id")},
             inverseJoinColumns = {@JoinColumn(name = "doctor_id")}
     )

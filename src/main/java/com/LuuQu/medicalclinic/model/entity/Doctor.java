@@ -16,29 +16,22 @@ public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "EMAIL")
-    private String email;
-    @Column(name = "PASSWORD")
-    private String password;
-    @Column(name = "FIRST_NAME")
-    private String firstName;
-    @Column(name = "LAST_NAME")
-    private String lastName;
+    @OneToOne(cascade = CascadeType.ALL)
+    private User user = new User();
     @Column(name = "SPECIALIZATION")
     private String specialization;
     @ManyToMany
     @JoinTable(
-            name = "Doctor_Facility",
+            name = "DOCTOR_FACILITY",
             joinColumns = {@JoinColumn(name = "doctor_id")},
             inverseJoinColumns = {@JoinColumn(name = "facility_id")}
     )
     private Set<Facility> facilities = new HashSet<>();
+    @OneToMany(mappedBy = "doctor")
+    private Set<Appointment> appointments = new HashSet<>();
 
     public void update(Doctor doctor) {
-        this.email = doctor.getEmail();
-        this.password = doctor.getPassword();
-        this.firstName = doctor.getFirstName();
-        this.lastName = doctor.getLastName();
+        this.user = doctor.getUser();
         this.specialization = doctor.getSpecialization();
     }
 
@@ -65,10 +58,7 @@ public class Doctor {
     public String toString() {
         return "Doctor{" +
                 "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", user='" + user + '\'' +
                 ", specialization='" + specialization + '\'' +
                 ", facilities=" + facilities.stream()
                 .map(Facility::toSimpleString)
@@ -79,10 +69,7 @@ public class Doctor {
     public String toSimpleString() {
         return "Doctor{" +
                 "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", user='" + user + '\'' +
                 ", specialization='" + specialization + '\'' +
                 '}';
     }

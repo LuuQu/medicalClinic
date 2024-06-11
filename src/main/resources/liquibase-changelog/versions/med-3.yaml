@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: LuuQu
+      changes:
+        - createTable:
+            tableName: APPOINTMENT
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_appointment_id
+                  name: id
+                  type: Long
+              - column:
+                  name: start_date
+                  type: datetime
+              - column:
+                  name: end_date
+                  type: datetime
+              - column:
+                  name: patient_id
+                  type: Long
+                  constraints:
+                    foreignKeyName: fk_appointment_patient
+                    references: PATIENT(id)
+              - column:
+                  name: doctor_id
+                  type: Long
+                  constraints:
+                    foreignKeyName: fk_appointment_doctor
+                    references: DOCTOR(id)

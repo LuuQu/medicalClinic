@@ -13,5 +13,6 @@ public class DoctorDto {
     private String firstName;
     private String lastName;
     private String specialization;
+    private Set<PatientSimpleDto> patients = new HashSet<>();
     private Set<FacilitySimpleDto> facilities = new HashSet<>();
 }

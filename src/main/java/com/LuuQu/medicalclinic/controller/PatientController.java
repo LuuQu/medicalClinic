@@ -2,7 +2,9 @@ package com.LuuQu.medicalclinic.controller;
 
 import com.LuuQu.medicalclinic.model.dto.PatientDto;
 import com.LuuQu.medicalclinic.service.PatientService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,39 +12,45 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/patients")
+@RequestMapping(value = "/patients", produces = "application/json")
 public class PatientController {
     private final PatientService patientService;
 
+    @Operation(summary = "Get list of patients by pages. \"page\": num of page, \"size\": num of elements in page.")
     @GetMapping
-    public List<PatientDto> getPatientList() {
-        return patientService.getPatients();
+    public List<PatientDto> getPatientList(Pageable pageable) {
+        return patientService.getPatients(pageable);
     }
 
-    @GetMapping("/{email}")
-    public PatientDto getPatient(@PathVariable String email) {
-        return patientService.getPatient(email);
+    @Operation(summary = "Get single patient by id.")
+    @GetMapping("/{id}")
+    public PatientDto getPatient(@PathVariable Long id) {
+        return patientService.getPatient(id);
     }
 
+    @Operation(summary = "Add patient to database. Patient description in request body.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PatientDto addPatient(@RequestBody PatientDto patient) {
         return patientService.addPatient(patient);
     }
 
+    @Operation(summary = "Delete patient by id.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{email}")
-    public void deletePatient(@PathVariable String email) {
-        patientService.deletePatient(email);
+    @DeleteMapping("/{id}")
+    public void deletePatient(@PathVariable Long id) {
+        patientService.deletePatient(id);
     }
 
-    @PutMapping("/{email}")
-    public PatientDto editPatient(@PathVariable String email, @RequestBody PatientDto patient) {
-        return patientService.editPatient(email, patient);
+    @Operation(summary = "Edit patient with given id and replace data by request body.")
+    @PutMapping("/{id}")
+    public PatientDto editPatient(@PathVariable Long id, @RequestBody PatientDto patient) {
+        return patientService.editPatient(id, patient);
     }
 
-    @PatchMapping("/{email}/password")
-    public PatientDto editPassword(@PathVariable String email, @RequestBody PatientDto patient) {
-        return patientService.editPassword(email, patient);
+    @Operation(summary = "Edit password in request body to patient with given id.")
+    @PatchMapping("/{id}/password")
+    public PatientDto editPassword(@PathVariable Long id, @RequestBody PatientDto patient) {
+        return patientService.editPassword(id, patient);
     }
 }
