@@ -49,7 +49,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void getPatient_noPatientInDb_CorrectException() {
+    void getPatient_noPatientInDb_NotFoundExceptionThrown() {
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());
 
         var exception = Assertions.assertThrows(NotFoundException.class,
@@ -70,7 +70,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void addPatient_emailTaken_CorrectException() {
+    void addPatient_emailTaken_PatientExceptionThrown() {
         String email = "email";
         User user = new User();
         user.setEmail(email);
@@ -110,7 +110,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void deletePatient_noPatientInDb_functionReturned() {
+    void deletePatient_noPatientInDb_NotFoundExceptionThrown() {
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());
 
         var exception = Assertions.assertThrows(NotFoundException.class,
@@ -120,7 +120,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void editPatient_noPatientInDb_CorrectException() {
+    void editPatient_noPatientInDb_NotFoundExceptionThrown() {
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());
 
         var exception = Assertions.assertThrows(NotFoundException.class,
@@ -141,7 +141,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void editPassword_EmptyPassword_CorrectException() {
+    void editPassword_EmptyPassword_PatientExceptionThrown() {
         var exception = Assertions.assertThrows(PatientException.class,
                 () -> patientService.editPassword(1L, new PatientDto()));
 
@@ -149,7 +149,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void editPassword_noPatientInDb_CorrectException() {
+    void editPassword_noPatientInDb_NotFoundExceptionThrown() {
         String password = "password";
         PatientDto patientPassword = new PatientDto();
         patientPassword.setPassword(password);

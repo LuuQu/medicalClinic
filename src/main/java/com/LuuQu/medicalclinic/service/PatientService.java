@@ -9,9 +9,12 @@ import com.LuuQu.medicalclinic.repository.PatientRepository;
 import com.LuuQu.medicalclinic.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,9 +26,30 @@ public class PatientService {
     private final PatientMapper patientMapper;
 
     public List<PatientDto> getPatients(Pageable pageable) {
-        return patientRepository.findAll(pageable).stream()
+        return patientRepository.findAll(setCorrectPageableSort(pageable)).stream()
                 .map(patientMapper::toDto)
                 .toList();
+    }
+
+    private Pageable setCorrectPageableSort(Pageable pageable) {
+        List<Sort.Order> orders = new ArrayList<>();
+        for (Sort.Order item : pageable.getSort().get().toList()) {
+            String property = item.getProperty();
+            if (property.contains("email")) {
+                property = property.replaceAll("email", "user.email");
+            }
+            else if (property.contains("password")) {
+                property = property.replaceAll("password", "user.password");
+            }
+            else if (property.contains("firstName")) {
+                property = property.replaceAll("firstName", "user.firstName");
+            }
+            else if (property.contains("lastName")) {
+                property = property.replaceAll("lastName", "user.lastName");
+            }
+            orders.add(new Sort.Order(item.getDirection(), property));
+        }
+        return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(orders));
     }
 
     public PatientDto getPatient(Long id) {

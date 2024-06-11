@@ -49,7 +49,7 @@ public class DoctorServiceTest {
     }
 
     @Test
-    void getDoctor_noDoctorInDb_CorrectException() {
+    void getDoctor_noDoctorInDb_NotFoundExceptionThrown() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.empty());
 
         var exception = Assertions.assertThrows(NotFoundException.class,
@@ -59,7 +59,7 @@ public class DoctorServiceTest {
     }
 
     @Test
-    void getDoctor_doctorFound_DtoReturned() {
+    void getDoctor_doctorExist_DtoReturned() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(TestData.DoctorFactory.get(1L)));
         DoctorDto expectedResult = TestData.DoctorDtoFactory.get(1L);
         expectedResult.setId(1L);
@@ -80,7 +80,7 @@ public class DoctorServiceTest {
     }
 
     @Test
-    void editDoctor_noDoctorInDb_CorrectException() {
+    void editDoctor_noDoctorInDb_NotFoundExceptionThrown() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.empty());
 
         var exception = Assertions.assertThrows(NotFoundException.class,
@@ -112,7 +112,7 @@ public class DoctorServiceTest {
     }
 
     @Test
-    void deleteDoctor_noDoctorInDb_functionReturned() {
+    void deleteDoctor_noDoctorInDb_NotFoundExceptionThrown() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.empty());
 
         var exception = Assertions.assertThrows(NotFoundException.class,
@@ -122,7 +122,7 @@ public class DoctorServiceTest {
     }
 
     @Test
-    void addDoctorFacility_noDoctorInDb_CorrectException() {
+    void addDoctorFacility_noDoctorInDb_NotFoundExceptionThrown() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.empty());
 
         var exception = Assertions.assertThrows(NotFoundException.class,
@@ -132,7 +132,7 @@ public class DoctorServiceTest {
     }
 
     @Test
-    void addDoctorFacility_noFacilityInDb_CorrectException() {
+    void addDoctorFacility_noFacilityInDb_NotFoundExceptionThrown() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(new Doctor()));
         when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -166,7 +166,7 @@ public class DoctorServiceTest {
     }
 
     @Test
-    void removeDoctorFacility_noDoctorInDb_CorrectException() {
+    void removeDoctorFacility_noDoctorInDb_NotFoundExceptionThrown() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.empty());
 
         var exception = Assertions.assertThrows(NotFoundException.class,
@@ -176,7 +176,7 @@ public class DoctorServiceTest {
     }
 
     @Test
-    void removeDoctorFacility_noFacilityInDb_CorrectException() {
+    void removeDoctorFacility_noFacilityInDb_NotFoundExceptionThrown() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(new Doctor()));
         when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
 

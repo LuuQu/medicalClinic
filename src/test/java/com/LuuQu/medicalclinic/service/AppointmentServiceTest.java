@@ -47,7 +47,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    void addPatient_AppointmentDoesNotExist_CorrectException() {
+    void addPatient_AppointmentDoesNotExist_NotFoundExceptionThrown() {
         //given
         when(appointmentRepository.findById(1L)).thenReturn(Optional.empty());
         //when i then
@@ -57,7 +57,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    void addPatient_AppointmentHavePatient_CorrectException() {
+    void addPatient_AppointmentHavePatient_AppointmentExceptionThrown() {
         //given
         Appointment appointment = new Appointment();
         appointment.setId(1L);
@@ -71,7 +71,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    void addPatient_PatientNotFound_CorrectException() {
+    void addPatient_PatientNotFound_NotFoundExceptionThrown() {
         //given
         Appointment appointment = new Appointment();
         appointment.setId(1L);
@@ -107,7 +107,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    void addAppointment_IncorrectMinutesInStartDate_CorrectException() {
+    void addAppointment_IncorrectMinutesInStartDate_AppointmentExceptionThrown() {
         AppointmentDto appointmentDto = new AppointmentDto();
         LocalDateTime startTime = LocalDateTime.now().plusHours(1).withMinute(5);
         appointmentDto.setStartDate(startTime);
@@ -119,7 +119,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    void addAppointment_IncorrectMinutesInEndDate_CorrectException() {
+    void addAppointment_IncorrectMinutesInEndDate_AppointmentExceptionThrown() {
         AppointmentDto appointmentDto = new AppointmentDto();
         LocalDateTime startTime = LocalDateTime.now().plusHours(2).withMinute(0);
         appointmentDto.setStartDate(startTime);
@@ -133,7 +133,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    void addAppointment_startDateBeforeCurrent_CorrectException() {
+    void addAppointment_startDateBeforeCurrent_AppointmentExceptionThrown() {
         AppointmentDto appointmentDto = new AppointmentDto();
         LocalDateTime startTime = LocalDateTime.now().minusDays(1).withMinute(0);
         appointmentDto.setStartDate(startTime);
@@ -147,7 +147,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    void addAppointment_endDateBeforeStartDate_CorrectException() {
+    void addAppointment_endDateBeforeStartDate_AppointmentExceptionThrown() {
         AppointmentDto appointmentDto = new AppointmentDto();
         LocalDateTime startTime = LocalDateTime.now().plusDays(1).withMinute(0);
         appointmentDto.setStartDate(startTime);
@@ -161,7 +161,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    void addAppointment_endDateEqualsStartDate_CorrectException() {
+    void addAppointment_endDateEqualsStartDate_AppointmentExceptionThrown() {
         AppointmentDto appointmentDto = new AppointmentDto();
         LocalDateTime startTime = LocalDateTime.now().plusDays(1).withMinute(0);
         appointmentDto.setStartDate(startTime);
@@ -175,7 +175,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    void addAppointment_nonExistentDoctor_CorrectException() {
+    void addAppointment_nonExistentDoctor_NotFoundExceptionThrown() {
         AppointmentDto appointmentDto = new AppointmentDto();
         LocalDateTime startTime = LocalDateTime.now().plusDays(1).withMinute(0);
         appointmentDto.setStartDate(startTime);
@@ -189,7 +189,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    void addAppointment_doctorHaveAppointmentOnSetTime_CorrectException() {
+    void addAppointment_doctorHaveAppointmentOnSetTime_AppointmentExceptionThrown() {
         AppointmentDto appointmentDto = new AppointmentDto();
         LocalDateTime startTime = LocalDateTime.now().plusDays(1).withMinute(0);
         appointmentDto.setStartDate(startTime);

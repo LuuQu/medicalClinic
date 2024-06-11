@@ -9,9 +9,12 @@ import com.LuuQu.medicalclinic.repository.DoctorRepository;
 import com.LuuQu.medicalclinic.repository.FacilityRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,9 +25,30 @@ public class DoctorService {
     private final DoctorMapper doctorMapper;
 
     public List<DoctorDto> getDoctors(Pageable pageable) {
-        return doctorRepository.findAll(pageable).stream()
+        return doctorRepository.findAll(setCorrectPageableSort(pageable)).stream()
                 .map(doctorMapper::toDto)
                 .toList();
+    }
+
+    private Pageable setCorrectPageableSort(Pageable pageable) {
+        List<Sort.Order> orders = new ArrayList<>();
+        for (Sort.Order item : pageable.getSort().get().toList()) {
+            String property = item.getProperty();
+            if (property.contains("email")) {
+                property = property.replaceAll("email", "user.email");
+            }
+            else if (property.contains("password")) {
+                property = property.replaceAll("password", "user.password");
+            }
+            else if (property.contains("firstName")) {
+                property = property.replaceAll("firstName", "user.firstName");
+            }
+            else if (property.contains("lastName")) {
+                property = property.replaceAll("lastName", "user.lastName");
+            }
+            orders.add(new Sort.Order(item.getDirection(), property));
+        }
+        return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(orders));
     }
 
     public DoctorDto getDoctor(Long id) {
@@ -50,7 +74,7 @@ public class DoctorService {
 
     public void deleteDoctor(Long id) {
         var doctor = doctorRepository.findById(id);
-        if(doctor.isEmpty()) {
+        if (doctor.isEmpty()) {
             throw new NotFoundException("Doctor not found");
         }
         doctorRepository.delete(doctor.get());

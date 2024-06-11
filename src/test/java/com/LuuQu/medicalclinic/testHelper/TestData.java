@@ -13,6 +13,7 @@ import java.util.List;
 
 public class TestData {
     public static class FacilityFactory {
+
         public static List<Facility> getList(int amount) {
             List<Facility> list = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
@@ -43,6 +44,7 @@ public class TestData {
     }
 
     public static class FacilityDtoFactory {
+
         public static List<FacilityDto> getList(int amount) {
             List<FacilityDto> list = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
@@ -73,6 +75,7 @@ public class TestData {
     }
 
     public static class FacilitySimpleDtoFactory {
+
         public static List<FacilitySimpleDto> getList(int amount) {
             List<FacilitySimpleDto> list = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
@@ -103,6 +106,7 @@ public class TestData {
     }
 
     public static class PatientFactory {
+
         public static List<Patient> getList(int amount) {
             List<Patient> list = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
@@ -135,6 +139,7 @@ public class TestData {
     }
 
     public static class PatientDtoFactory {
+
         public static List<PatientDto> getList(int amount) {
             List<PatientDto> list = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
@@ -167,6 +172,7 @@ public class TestData {
     }
 
     public static class DoctorFactory {
+
         public static List<Doctor> getList(int amount) {
             List<Doctor> list = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
@@ -197,6 +203,7 @@ public class TestData {
     }
 
     public static class DoctorDtoFactory {
+
         public static List<DoctorDto> getList(int amount) {
             List<DoctorDto> list = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
@@ -227,6 +234,7 @@ public class TestData {
     }
 
     public static class DoctorSimpleDtoFactory {
+
         public static List<DoctorSimpleDto> getList(int amount) {
             List<DoctorSimpleDto> list = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
@@ -257,6 +265,7 @@ public class TestData {
     }
 
     public static class AppointmentDtoFactory {
+
         public static List<AppointmentDto> getList(int amount) {
             List<AppointmentDto> list = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
@@ -282,7 +291,9 @@ public class TestData {
             return appointmentDto;
         }
     }
+
     public static class AppointmentFactory {
+
         public static List<Appointment> getList(int amount) {
             List<Appointment> list = new ArrayList<>();
             for (int i = 0; i < amount; i++) {

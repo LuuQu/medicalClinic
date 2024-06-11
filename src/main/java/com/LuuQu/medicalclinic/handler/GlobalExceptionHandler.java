@@ -18,18 +18,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessageDto> medicalClinicExceptionErrorResponse(MedicalClinicException exception) {
         return ResponseEntity.badRequest().body(new ErrorMessageDto(exception.getMessage()));
     }
+
     @ExceptionHandler(AppointmentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ErrorMessageDto> appointmentExceptionErrorResponse(AppointmentException patientException) {
         return ResponseEntity.badRequest().body(new ErrorMessageDto(patientException.getMessage()));
     }
+
     @ExceptionHandler(PatientException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ErrorMessageDto> patientExceptionErrorResponse(PatientException patientException) {
         return ResponseEntity.badRequest().body(new ErrorMessageDto(patientException.getMessage()));
     }
+
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)

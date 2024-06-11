@@ -48,7 +48,7 @@ public class FacilityServiceTest {
     }
 
     @Test
-    void getFacility_noFacilityInDb_CorrectException() {
+    void getFacility_noFacilityInDb_NotFoundExceptionThrown() {
         when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
 
         var exception = Assertions.assertThrows(NotFoundException.class,
@@ -75,7 +75,7 @@ public class FacilityServiceTest {
     }
 
     @Test
-    void editFacility_noFacilityInDb_CorrectException() {
+    void editFacility_noFacilityInDb_NotFoundExceptionThrown() {
         when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
 
         var exception = Assertions.assertThrows(NotFoundException.class,
@@ -107,7 +107,7 @@ public class FacilityServiceTest {
     }
 
     @Test
-    void deleteFacility_noFacilityInDb_functionReturned() {
+    void deleteFacility_noFacilityInDb_NotFoundExceptionThrown() {
         when(facilityRepository.findById(1L)).thenReturn(Optional.empty());
 
         var exception = Assertions.assertThrows(NotFoundException.class,
