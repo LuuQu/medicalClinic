@@ -14,12 +14,15 @@ import com.LuuQu.medicalclinic.model.entity.Patient;
 import com.LuuQu.medicalclinic.repository.AppointmentRepository;
 import com.LuuQu.medicalclinic.repository.DoctorRepository;
 import com.LuuQu.medicalclinic.repository.PatientRepository;
+import com.LuuQu.medicalclinic.testHelper.TestData;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -163,10 +166,9 @@ public class AppointmentServiceTest {
     @Test
     void addAppointment_endDateEqualsStartDate_AppointmentExceptionThrown() {
         AppointmentDto appointmentDto = new AppointmentDto();
-        LocalDateTime startTime = LocalDateTime.now().plusDays(1).withMinute(0);
-        appointmentDto.setStartDate(startTime);
-        LocalDateTime endTime = LocalDateTime.now().plusDays(1).withMinute(0);
-        appointmentDto.setEndDate(endTime);
+        LocalDateTime time = LocalDateTime.now().plusDays(1).withMinute(0);
+        appointmentDto.setStartDate(time);
+        appointmentDto.setEndDate(time);
 
         //when i then
         assertThatThrownBy(() -> appointmentService.addAppointment(1L, appointmentDto))
@@ -227,5 +229,61 @@ public class AppointmentServiceTest {
         AppointmentDto result = appointmentService.addAppointment(1L, appointmentDto);
 
         assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void getPatientAppointments_DataCorrect_DtoListReturned() {
+        Long patientId = 1L;
+        List<Appointment> appointmentList = TestData.AppointmentFactory.getList(2);
+        for (Appointment appointment : appointmentList) {
+            appointment.setPatient(TestData.PatientFactory.get(1L));
+        }
+        when(appointmentRepository.getDoctorAppointments(patientId)).thenReturn(appointmentList);
+        List<AppointmentDto> expectedResult = TestData.AppointmentDtoFactory.getList(2);
+        for (AppointmentDto appointment : expectedResult) {
+            appointment.setPatient(TestData.PatientDtoFactory.get(1L));
+        }
+
+        List<AppointmentDto> result = appointmentService.getDoctorAppointments(patientId);
+
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void getDoctorAppointments_DataCorrect_DtoListReturned() {
+        Long doctorId = 1L;
+        List<Appointment> appointmentList = TestData.AppointmentFactory.getList(2);
+        for (Appointment appointment : appointmentList) {
+            appointment.setDoctor(TestData.DoctorFactory.get(1L));
+        }
+        when(appointmentRepository.getDoctorAppointments(doctorId)).thenReturn(appointmentList);
+        List<AppointmentDto> expectedResult = TestData.AppointmentDtoFactory.getList(2);
+        for (AppointmentDto appointment : expectedResult) {
+            appointment.setDoctor(TestData.DoctorSimpleDtoFactory.get(1L));
+        }
+
+        List<AppointmentDto> result = appointmentService.getDoctorAppointments(doctorId);
+
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void getDoctorAvailableHours_DataCorrect_DtoListReturned() {
+        Long doctorId = 1L;
+        LocalDate date = LocalDate.now();
+        String specialization = "specialization";
+        List<Appointment> appointmentList = TestData.AppointmentFactory.getList(2);
+        for (Appointment appointment : appointmentList) {
+            appointment.setDoctor(TestData.DoctorFactory.get(1L));
+        }
+        when(appointmentRepository.getDoctorAppointments(doctorId, date, specialization)).thenReturn(appointmentList);
+        List<AppointmentDto> expectedResult = TestData.AppointmentDtoFactory.getList(2);
+        for (AppointmentDto appointment : expectedResult) {
+            appointment.setDoctor(TestData.DoctorSimpleDtoFactory.get(1L));
+        }
+
+        List<AppointmentDto> result = appointmentService.getDoctorAvailableHours(date, specialization, doctorId);
+
+        Assertions.assertEquals(expectedResult, result);
     }
 }

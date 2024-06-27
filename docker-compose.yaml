@@ -1,11 +1,13 @@
 version: '3'
 services:
-  app:
+  medicalclinic:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - 8080:8080
+    networks:
+      - medical-clinic-net
     depends_on:
       - db
     environment:
@@ -16,7 +18,16 @@ services:
     image: postgres
     ports:
       - 5432:5432
+    networks:
+      - medical-clinic-net
     environment:
       POSTGRES_DB: postgresql
       POSTGRES_USER: sa
       POSTGRES_PASSWORD: sa1234
+    volumes:
+      - medicalClinicDb:/var/lib/postgresql/data
+volumes:
+  medicalClinicDb:
+networks:
+  medical-clinic-net:
+    external: true

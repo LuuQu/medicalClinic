@@ -14,7 +14,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -64,5 +66,20 @@ public class AppointmentService {
         appointment.setDoctor(doctor);
         appointmentRepository.save(appointment);
         return appointmentMapper.toDto(appointment);
+    }
+    public List<AppointmentDto> getPatientAppointments(Long patientId) {
+        return appointmentRepository.getPatientAppointments(patientId).stream()
+                .map(appointmentMapper::toDto)
+                .toList();
+    }
+    public List<AppointmentDto> getDoctorAppointments(Long doctorId) {
+        return appointmentRepository.getDoctorAppointments(doctorId).stream()
+                .map(appointmentMapper::toDto)
+                .toList();
+    }
+    public List<AppointmentDto> getDoctorAvailableHours(LocalDate date, String specialization, Long doctorId) {
+        return appointmentRepository.getDoctorAppointments(doctorId, date, specialization).stream()
+                .map(appointmentMapper::toDto)
+                .toList();
     }
 }
