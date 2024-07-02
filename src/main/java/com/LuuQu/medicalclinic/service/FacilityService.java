@@ -7,6 +7,7 @@ import com.LuuQu.medicalclinic.model.entity.Facility;
 import com.LuuQu.medicalclinic.repository.FacilityRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FacilityService {
     private final FacilityRepository facilityRepository;
     private final FacilityMapper facilityMapper;
@@ -33,6 +35,7 @@ public class FacilityService {
     public FacilityDto addFacility(FacilityDto facilityDto) {
         Facility facility = facilityMapper.toEntity(facilityDto);
         facilityRepository.save(facility);
+        log.info("Facility {} added to database", facilityMapper.toDto(facility));
         return facilityMapper.toDto(facility);
     }
 
@@ -42,6 +45,7 @@ public class FacilityService {
                 .orElseThrow(() -> new NotFoundException("Non-existent facility"));
         facility.update(facilityMapper.toEntity(facilityDto));
         facilityRepository.save(facility);
+        log.info("Facility {} updated", facilityMapper.toDto(facility));
         return facilityMapper.toDto(facility);
     }
 
@@ -52,5 +56,6 @@ public class FacilityService {
             throw new NotFoundException("Facility not found");
         }
         facilityRepository.delete(facility.get());
+        log.info("Facility {} deleted", facilityMapper.toDto(facility.get()));
     }
 }

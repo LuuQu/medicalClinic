@@ -9,6 +9,7 @@ import com.LuuQu.medicalclinic.repository.PatientRepository;
 import com.LuuQu.medicalclinic.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PatientService {
     private final PatientRepository patientRepository;
     private final UserRepository userRepository;
@@ -65,6 +67,7 @@ public class PatientService {
         }
         Patient patient = patientMapper.toEntity(patientDto);
         patientRepository.save(patient);
+        log.info("Patient {} added to database", patient);
         return patientMapper.toDto(patient);
     }
 
@@ -74,6 +77,7 @@ public class PatientService {
             throw new NotFoundException("Patient not found");
         }
         patientRepository.delete(patientOptional.get());
+        log.info("Patient {} deleted", patientOptional.get());
     }
 
     @Transactional
@@ -82,6 +86,7 @@ public class PatientService {
                 .orElseThrow(() -> new NotFoundException("Patient does not exist"));
         patient.update(patientMapper.toEntity(patientDto));
         patientRepository.save(patient);
+        log.info("Patient {} updated", patient);
         return patientMapper.toDto(patient);
     }
 
@@ -94,6 +99,7 @@ public class PatientService {
                 .orElseThrow(() -> new NotFoundException("Patient does not exist"));
         patient.getUser().setPassword(patientPassword.getPassword());
         patientRepository.save(patient);
+        log.info("Patient {} got updated password", patient);
         return patientMapper.toDto(patient);
     }
 }

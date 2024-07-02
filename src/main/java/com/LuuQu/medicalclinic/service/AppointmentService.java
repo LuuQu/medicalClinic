@@ -12,6 +12,7 @@ import com.LuuQu.medicalclinic.repository.DoctorRepository;
 import com.LuuQu.medicalclinic.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final PatientRepository patientRepository;
@@ -37,6 +39,7 @@ public class AppointmentService {
                 .orElseThrow(() -> new NotFoundException("Patient not found"));
         appointment.setPatient(patient);
         appointmentRepository.save(appointment);
+        log.info("Patient {} added to appointment with id = {}", patient, appointmentId);
         return appointmentMapper.toDto(appointment);
     }
 
@@ -65,6 +68,7 @@ public class AppointmentService {
         Appointment appointment = appointmentMapper.toEntity(appointmentDto);
         appointment.setDoctor(doctor);
         appointmentRepository.save(appointment);
+        log.info("Appointment {} added to database", appointment);
         return appointmentMapper.toDto(appointment);
     }
     public List<AppointmentDto> getPatientAppointments(Long patientId) {
