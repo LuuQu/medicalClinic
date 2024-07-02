@@ -13,7 +13,7 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: pk_user_id
                   name: id
-                  type: Long
+                  type: int
               - column:
                   name: email
                   type: varchar(255)
@@ -42,7 +42,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
-                  type: Long
+                  type: int
                   constraints:
                     foreignKeyName: fk_patient_user
                     references: USER_TABLE(id)
@@ -63,7 +63,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
-                  type: Long
+                  type: int
                   constraints:
                     foreignKeyName: fk_doctor_user
                     references: USER_TABLE(id)

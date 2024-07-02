@@ -13,7 +13,7 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: pk_doctor_id
                   name: id
-                  type: Long
+                  type: int
               - column:
                   name: email
                   type: varchar(255)
@@ -39,7 +39,7 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: pk_facility_id
                   name: id
-                  type: Long
+                  type: int
               - column:
                   name: name
                   type: varchar(255)
@@ -60,14 +60,14 @@ databaseChangeLog:
             column:
               - column:
                   name: doctor_id
-                  type: Long
+                  type: int
                   constraints:
                     primaryKey: true
                     foreignKeyName: fk_doctor_facility_doctor
                     references: DOCTOR(id)
               - column:
                   name: facility_id
-                  type: Long
+                  type: int
                   constraints:
                     primaryKey: true
                     foreignKeyName: fk_doctor_facility_facility

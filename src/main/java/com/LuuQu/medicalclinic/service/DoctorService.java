@@ -9,6 +9,7 @@ import com.LuuQu.medicalclinic.repository.DoctorRepository;
 import com.LuuQu.medicalclinic.repository.FacilityRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final FacilityRepository facilityRepository;
@@ -60,6 +62,7 @@ public class DoctorService {
     public DoctorDto addDoctor(DoctorDto doctorDto) {
         Doctor doctor = doctorMapper.toEntity(doctorDto);
         doctorRepository.save(doctor);
+        log.info("Doctor {} added to database", doctor);
         return doctorMapper.toDto(doctor);
     }
 
@@ -69,6 +72,7 @@ public class DoctorService {
                 .orElseThrow(() -> new NotFoundException("Non-existent doctor"));
         doctor.update(doctorMapper.toEntity(doctorDto));
         doctorRepository.save(doctor);
+        log.info("Doctor {} updated", doctor);
         return doctorMapper.toDto(doctor);
     }
 
@@ -78,6 +82,7 @@ public class DoctorService {
             throw new NotFoundException("Doctor not found");
         }
         doctorRepository.delete(doctor.get());
+        log.info("Doctor {} deleted from database", doctor.get());
     }
 
     public DoctorDto addDoctorFacility(Long doctorId, Long facilityId) {
@@ -87,6 +92,7 @@ public class DoctorService {
                 .orElseThrow(() -> new NotFoundException("Non-existent facility"));
         doctor.getFacilities().add(facility);
         doctorRepository.save(doctor);
+        log.info("Facility with id {} added to doctor {}", facilityId, doctor);
         return doctorMapper.toDto(doctor);
     }
 
@@ -97,6 +103,7 @@ public class DoctorService {
                 .orElseThrow(() -> new NotFoundException("Non-existent facility"));
         doctor.getFacilities().remove(facility);
         doctorRepository.save(doctor);
+        log.info("Facility with id {} removed from doctor {}", facilityId, doctor);
         return doctorMapper.toDto(doctor);
     }
 }

@@ -1,0 +1,33 @@
+version: '3'
+services:
+  medicalclinic:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - medical-clinic-net
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgresql
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: sa1234
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    networks:
+      - medical-clinic-net
+    environment:
+      POSTGRES_DB: postgresql
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: sa1234
+    volumes:
+      - medicalClinicDb:/var/lib/postgresql/data
+volumes:
+  medicalClinicDb:
+networks:
+  medical-clinic-net:
+    external: true
