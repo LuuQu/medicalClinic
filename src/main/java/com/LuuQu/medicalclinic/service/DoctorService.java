@@ -62,7 +62,7 @@ public class DoctorService {
     public DoctorDto addDoctor(DoctorDto doctorDto) {
         Doctor doctor = doctorMapper.toEntity(doctorDto);
         doctorRepository.save(doctor);
-        log.info("Doctor {} added to database", doctorMapper.toDto(doctor));
+        log.info("Doctor {} added to database", doctor);
         return doctorMapper.toDto(doctor);
     }
 
@@ -72,7 +72,7 @@ public class DoctorService {
                 .orElseThrow(() -> new NotFoundException("Non-existent doctor"));
         doctor.update(doctorMapper.toEntity(doctorDto));
         doctorRepository.save(doctor);
-        log.info("Doctor {} updated", doctorMapper.toDto(doctor));
+        log.info("Doctor {} updated", doctor);
         return doctorMapper.toDto(doctor);
     }
 
@@ -82,7 +82,7 @@ public class DoctorService {
             throw new NotFoundException("Doctor not found");
         }
         doctorRepository.delete(doctor.get());
-        log.info("Doctor {} deleted from database", doctorMapper.toDto(doctor.get()));
+        log.info("Doctor {} deleted from database", doctor.get());
     }
 
     public DoctorDto addDoctorFacility(Long doctorId, Long facilityId) {
@@ -92,7 +92,7 @@ public class DoctorService {
                 .orElseThrow(() -> new NotFoundException("Non-existent facility"));
         doctor.getFacilities().add(facility);
         doctorRepository.save(doctor);
-        log.info("Facility with id {} added to doctor {}", facilityId, doctorMapper.toDto(doctor));
+        log.info("Facility with id {} added to doctor {}", facilityId, doctor);
         return doctorMapper.toDto(doctor);
     }
 
@@ -103,7 +103,7 @@ public class DoctorService {
                 .orElseThrow(() -> new NotFoundException("Non-existent facility"));
         doctor.getFacilities().remove(facility);
         doctorRepository.save(doctor);
-        log.info("Facility with id {} removed from doctor {}", facilityId, doctorMapper.toDto(doctor));
+        log.info("Facility with id {} removed from doctor {}", facilityId, doctor);
         return doctorMapper.toDto(doctor);
     }
 }
